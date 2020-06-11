@@ -5,7 +5,7 @@ from selenium.webdriver import Remote
 
 class Application(ABC):
     """
-    Interface of any application controlled by Selenium WebDriver API
+    Interface of any application controlled by Selenium WebDriver API.
     """
 
     @property
