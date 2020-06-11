@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
+from datetime import timedelta
+
 from selenium.webdriver import Remote
 
 
@@ -24,9 +26,9 @@ class Application(ABC):
         pass
 
     @abstractmethod
-    def set_implicit_wait_timeout(self, value: int) -> None:
+    def set_implicit_wait_timeout(self, value: timedelta) -> None:
         """
         Sets implicit wait timeout to Selenium WebDriver.
-        :param value: timeout value to set (in seconds).
+        :param value: timeout value to set.
         """
         pass
