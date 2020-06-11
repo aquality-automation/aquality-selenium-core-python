@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 from datetime import timedelta
+from typing import Callable
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -12,13 +13,14 @@ from aquality_selenium_core.elements.element_factory import ElementFactory
 from aquality_selenium_core.elements.element_finder import ElementFinder
 from aquality_selenium_core.elements.element_state import ElementState
 from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
+from aquality_selenium_core.elements.parent import Parent, T
 from aquality_selenium_core.localization.localized_logger import LocalizedLogger
 from aquality_selenium_core.logging.logger import Logger
 from aquality_selenium_core.utilities.element_action_retrier import ElementActionRetrier
 from aquality_selenium_core.waitings.conditional_wait import ConditionalWait
 
 
-class Element(ABC):
+class Element(ABC, Parent):
     """
     Base class for any custom element.
     """
@@ -91,6 +93,11 @@ class Element(ABC):
         Clicks on the item.
         """
         raise NotImplementedError
+
+    def find_child_element(self, child_locator: By, name: str = None,
+                           supplier: Callable[[By, str, ElementState], T] = None,
+                           state: ElementState = ElementState.DISPLAYED) -> T:
+        return self._element_factory.find_child_element(self, child_locator, name, supplier, state)
 
     @property
     def _element_state(self):
