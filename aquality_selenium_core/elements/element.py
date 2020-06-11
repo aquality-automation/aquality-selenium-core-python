@@ -5,17 +5,17 @@ from datetime import timedelta
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from aquality_selenium_core.applications.Application import Application
-from aquality_selenium_core.configurations.ElementCacheConfiguration import ElementCacheConfiguration
-from aquality_selenium_core.elements.ElementCacheHandler import ElementCacheHandler
-from aquality_selenium_core.elements.ElementFactory import ElementFactory
-from aquality_selenium_core.elements.ElementFinder import ElementFinder
-from aquality_selenium_core.elements.ElementState import ElementState
-from aquality_selenium_core.elements.ElementStateProvider import ElementStateProvider
-from aquality_selenium_core.localization.LocalizedLogger import LocalizedLogger
-from aquality_selenium_core.logging.Logger import Logger
-from aquality_selenium_core.utilities.ElementActionRetrier import ElementActionRetrier
-from aquality_selenium_core.waitings.ConditionalWait import ConditionalWait
+from aquality_selenium_core.applications.application import Application
+from aquality_selenium_core.configurations.element_cache_configuration import ElementCacheConfiguration
+from aquality_selenium_core.elements.element_cache_handler import ElementCacheHandler
+from aquality_selenium_core.elements.element_factory import ElementFactory
+from aquality_selenium_core.elements.element_finder import ElementFinder
+from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
+from aquality_selenium_core.localization.localized_logger import LocalizedLogger
+from aquality_selenium_core.logging.logger import Logger
+from aquality_selenium_core.utilities.element_action_retrier import ElementActionRetrier
+from aquality_selenium_core.waitings.conditional_wait import ConditionalWait
 
 
 class Element(ABC):
