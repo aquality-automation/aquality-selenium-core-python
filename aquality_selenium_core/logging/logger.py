@@ -21,11 +21,17 @@ class Logger(metaclass=Singleton):
         self._configure_logging()
         self._logger = logging.getLogger('aquality')
 
-    def __getattr__(self, item):
-        return getattr(self._logger, item)
-
     @staticmethod
     def _configure_logging():
         config_file_path = ResourceFile.get_resource_path('logconfig.json')
         data = FileUtils.read_json(config_file_path)
         logging.config.dictConfig(data)
+
+    def add_handler(self, handler: logging.Handler) -> None:
+        self._logger.addHandler(handler)
+
+    def remove_handler(self, handler: logging.Handler) -> None:
+        self._logger.removeHandler(handler)
+
+    def __getattr__(self, item):
+        return getattr(self._logger, item)
