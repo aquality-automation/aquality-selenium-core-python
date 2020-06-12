@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, List
 
 from selenium.webdriver.common.by import By
 
@@ -43,6 +43,24 @@ class ElementFactory(ABC):
         """
         pass
 
+    @abstractmethod
+    def find_child_elements(self, parent_element: Element, child_locator: By, name: str = None,
+                            supplier: Callable[[By, str, ElementState], T] = None,
+                            expected_count: ElementsCount = ElementsCount.ANY,
+                            state: ElementState = ElementState.DISPLAYED) -> List[T]:
+        """
+        Finds child element by its locator relative to parent element.
+        :param parent_element: Parent element.
+        :param child_locator: Locator of child element relative to its parent.
+        :param name: Delegate that defines constructor of element in case of custom element.
+        :param supplier: Child element state.
+        :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
+        :param state: Child element name.
+        :return: Instance of child element.
+        """
+        pass
+
+    @abstractmethod
     def find_elements(self, locator: By, name: str, supplier: Callable[[By, str, ElementState], T] = None,
                       expected_count: ElementsCount = ElementsCount.ANY,
                       state: ElementState = ElementState.DISPLAYED) -> T:

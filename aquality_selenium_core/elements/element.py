@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import Callable
+from typing import Callable, List
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -13,6 +13,7 @@ from aquality_selenium_core.elements.element_factory import ElementFactory
 from aquality_selenium_core.elements.element_finder import ElementFinder
 from aquality_selenium_core.elements.element_state import ElementState
 from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
+from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import Parent, T
 from aquality_selenium_core.localization.localized_logger import LocalizedLogger
 from aquality_selenium_core.logging.logger import Logger
@@ -98,6 +99,12 @@ class Element(ABC, Parent):
                            supplier: Callable[[By, str, ElementState], T] = None,
                            state: ElementState = ElementState.DISPLAYED) -> T:
         return self._element_factory.find_child_element(self, child_locator, name, supplier, state)
+
+    def find_child_elements(self, child_locator: By, name: str = None,
+                            supplier: Callable[[By, str, ElementState], T] = None,
+                            expected_count: ElementsCount = ElementsCount.ANY,
+                            state: ElementState = ElementState.DISPLAYED) -> List[T]:
+        return self._element_factory.find_child_elements(self, child_locator, name, supplier, expected_count, state)
 
     @property
     def _element_state(self):
