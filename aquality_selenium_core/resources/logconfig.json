@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "detailed": {
+      "class": "logging.Formatter",
+      "format": "%(asctime)s %(name)-15s %(levelname)-8s %(processName)-10s %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "detailed"
+    },
+    "file": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "formatter": "detailed",
+      "filename": "../../log.log"
+    }
+  },
+  "loggers": {
+    "": {
+      "level": "WARNING",
+      "handlers": ["console"]
+    },
+    "aquality": {
+      "level": "DEBUG",
+      "handlers": ["console", "file"],
+      "propagate": false
+    }
+  }
+}
