@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class AbcElementCacheConfiguration(ABC):
 
-    @abstractmethod
     @property
+    @abstractmethod
     def enabled(self) -> bool:
         pass

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class AbcLoggerConfiguration(ABC):
 
-    @abstractmethod
     @property
+    @abstractmethod
     def language(self) -> str:
         pass
