@@ -6,13 +6,13 @@ from typing import List, Any, Dict, Optional
 from jsonpath_ng import parse
 
 from aquality_selenium_core.exceptions.illegal_argument_exception import IllegalArgumentException
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
+from aquality_selenium_core.utilities.abstract_settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.resource_file import ResourceFile
 
 
-class JsonSettingsFile(AbcSettingsFile):
+class JsonSettingsFile(AbstractSettingsFile):
 
-    def __init__(self, resource_name):
+    def __init__(self, resource_name: str):
         self.__resource_file = ResourceFile(resource_name)
         self.__content = json.loads(self.__resource_file.file_content)
 

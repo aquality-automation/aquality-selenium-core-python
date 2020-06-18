@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
 
-class AbcSettingsFile(ABC):
+class AbstractSettingsFile(ABC):
 
     @abstractmethod
     def get_value(self, path: str) -> Any:
@@ -20,5 +20,5 @@ class AbcSettingsFile(ABC):
     def is_value_present(self, path: str) -> bool:
         pass
 
-    def get_value_or_default(self, path: str, default_value: object) -> Any:
+    def get_value_or_default(self, path: str, default_value: object) -> str:
         return self.get_value(path) if self.is_value_present(path) else default_value

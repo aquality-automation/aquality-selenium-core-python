@@ -3,20 +3,20 @@ from typing import Generator
 
 import pytest
 
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
-from aquality_selenium_core.utilities.abc_utilities_module import AbcUtilitiesModule
+from aquality_selenium_core.utilities.abstract_settings_file import AbstractSettingsFile
+from aquality_selenium_core.utilities.abstract_utilities_module import AbstractUtilitiesModule
 from aquality_selenium_core.utilities.resource_instance_mock import ResourceInstanceMock
 from tests.utilities_tests.settings_file_tests.test_keys import TestKeys
 
 
 @pytest.fixture(scope="function")
-def get_test_profile() -> Generator[AbcSettingsFile, None, None]:
+def get_test_profile() -> Generator[AbstractSettingsFile, None, None]:
     os.environ["profile"] = 'jsontest'
-    yield AbcUtilitiesModule().get_instance_of_settings_file()
+    yield AbstractUtilitiesModule().get_instance_of_settings_file()
 
 
 @pytest.fixture(scope="function")
-def get_default_profile() -> Generator[AbcSettingsFile, None, None]:
+def get_default_profile() -> Generator[AbstractSettingsFile, None, None]:
     yield ResourceInstanceMock.get_resource_instance()
 
 

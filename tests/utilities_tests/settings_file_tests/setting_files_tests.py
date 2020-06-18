@@ -6,7 +6,7 @@ import pytest
 from hamcrest import assert_that, equal_to, calling, raises
 
 from aquality_selenium_core.exceptions.illegal_argument_exception import IllegalArgumentException
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
+from aquality_selenium_core.utilities.abstract_settings_file import AbstractSettingsFile
 from tests.utilities_tests.settings_file_tests.test_keys import TestKeys
 
 
@@ -99,7 +99,8 @@ class TestsSettingsFiles:
         assert_that(is_null_value_present,
                     f'{TestKeys.NULLVALUE_PATH} value should be present in settings file {TestKeys.FILE_NAME}')
 
-    methods_to_check = [AbcSettingsFile.get_list, AbcSettingsFile.get_dictionary, AbcSettingsFile.get_value]
+    methods_to_check = [AbstractSettingsFile.get_list, AbstractSettingsFile.get_dictionary,
+                        AbstractSettingsFile.get_value]
 
     @pytest.mark.parametrize('func', methods_to_check)
     def test_should_throw_exception_when_value_not_found(self, func, get_test_profile):

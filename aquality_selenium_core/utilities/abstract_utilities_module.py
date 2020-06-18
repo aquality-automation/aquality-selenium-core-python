@@ -4,21 +4,21 @@ from typing import Callable
 
 import rootpath
 
-from aquality_selenium_core.utilities.abc_action_retrier import AbcActionRetrier
-from aquality_selenium_core.utilities.abc_element_action_retrier import AbcElementActionRetrier
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
+from aquality_selenium_core.utilities.abstract_action_retrier import AbstractActionRetrier
+from aquality_selenium_core.utilities.abstract_element_action_retrier import AbstractElementActionRetrier
+from aquality_selenium_core.utilities.abstract_settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.json_setting_file import JsonSettingsFile
 
 
-class AbcUtilitiesModule:
+class AbstractUtilitiesModule:
 
     def get_action_retrier_implementation(self) -> Callable:
-        return AbcActionRetrier
+        return AbstractActionRetrier
 
     def get_element_action_retrier_implementation(self) -> Callable:
-        return AbcElementActionRetrier
+        return AbstractElementActionRetrier
 
-    def get_instance_of_settings_file(self) -> AbcSettingsFile:
+    def get_instance_of_settings_file(self) -> AbstractSettingsFile:
         frame = sys._getframe(1).f_globals['__package__']
         os_var_profile = os.environ.get('profile')
         settings_file_name = f'settings.{os_var_profile}.json' if os_var_profile else 'settings.json'

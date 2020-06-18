@@ -10,4 +10,3 @@ class TestKeys:
     FILE_NAME = f'settings.{PROFILE}.json'
 
     EXPECTED_LANGUAGES = {"language": "ru"}
-
