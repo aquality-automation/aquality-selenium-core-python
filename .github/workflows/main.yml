@@ -169,9 +169,3 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.pypi_token }}
-      - name: Publish GitHub release notes
-        env:
-          GH_RELEASE_NOTES_TOKEN: ${{ secrets.release_notes }}
-        run: |
-          sudo apt-get install pandoc
-          tox -e publish-gh-release-notes
