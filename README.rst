@@ -1,5 +1,12 @@
 aquality-selenium-core-python
 -----------------------------
+.. image:: https://codecov.io/gh/aquality-automation/aquality-selenium-core-python/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/aquality-automation/aquality-selenium-core-python
+    :alt: Code coverage Status
+
+.. image:: https://travis-ci.org/aquality-automation/aquality-selenium-core-python.svg?branch=master
+    :target: https://travis-ci.org/pytest-dev/pytest
+
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 

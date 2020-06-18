@@ -22,7 +22,7 @@ def main():
         text = dedent(
             """
             codecov:
-              token: "616f752a-ba96-4341-ac9d-2a4d0bf0b49a"
+              token: "fba2499e-bb5b-4565-9105-76c5bf157197"
         """
         )
         f.write(text)
