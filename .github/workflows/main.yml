@@ -2,7 +2,7 @@ name: main
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feature/check-builds ]
   pull_request:
     branches: [ master ]
 
@@ -143,7 +143,7 @@ jobs:
     - run: tox -e linting
 
   deploy:
-    #if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && github.repository == 'aquality-automation/aquality-selenium-core-python'
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && github.repository == 'aquality-automation/aquality-selenium-core-python'
 
     runs-on: ubuntu-latest
 
