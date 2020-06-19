@@ -2,7 +2,10 @@ name: main
 
 on:
   push:
-    branches: [ master, feature/check-builds ]
+    branches: [ master ]
+    tags:
+      - "*"
+
   pull_request:
     branches: [ master ]
 
