@@ -5,6 +5,7 @@ This is done by CI during PRs and builds on the pytest-dev repository so we can 
 until codecov grows some native integration like it has with Travis and AppVeyor.
 """
 import os.path
+import sys
 from textwrap import dedent
 
 
@@ -22,8 +23,8 @@ def main():
         text = dedent(
             """
             codecov:
-              token: "fba2499e-bb5b-4565-9105-76c5bf157197"
-        """
+              token: "{}"
+        """.format(sys.argv[1])
         )
         f.write(text)
 

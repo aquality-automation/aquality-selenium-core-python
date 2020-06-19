@@ -121,7 +121,7 @@ jobs:
       - name: Prepare coverage token
         if: (matrix.use_coverage && ( github.repository == 'aquality-automation/aquality-selenium-core-python' || github.event_name == 'pull_request' ))
         run: |
-          python scripts/append_codecov_token.py
+          python scripts/append_codecov_token.py ${{ secrets.CODECOVTOKEN }}
       - name: Report coverage
         if: (matrix.use_coverage)
         env:
