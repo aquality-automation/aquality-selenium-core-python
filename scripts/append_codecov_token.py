@@ -24,7 +24,9 @@ def main():
             """
             codecov:
               token: "{}"
-        """.format(sys.argv[1])
+        """.format(
+                sys.argv[1]
+            )
         )
         f.write(text)
 
