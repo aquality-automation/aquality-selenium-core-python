@@ -46,7 +46,8 @@ class TestsSettingsFiles:
 
         language = get_test_profile.get_value(language_path)
         assert_that(language, equal_to(new_lang),
-                    f'Logger language in settings file {TestKeys.FILE_NAME} should be overridden with environment variable')
+                    f'Logger language in settings file {TestKeys.FILE_NAME} '
+                    f'should be overridden with environment variable')
 
     def test_should_be_possible_to_get_list_of_values(self, get_test_profile):
         arguments_path: str = 'arguments.start'
