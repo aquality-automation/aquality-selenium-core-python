@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
+"""Utilities for operations with files."""
 import json
+from typing import Any
 
 
 class FileUtils:
-    """
-    Util class for operations with files.
-    """
+    """Util class for operation with files."""
 
     @staticmethod
-    def read_json(file_path: str) -> dict:
+    def read_json(file_path: str) -> Any:
         """
-        Reads data from JSON file into dictionary.
+        Read data from JSON file into dictionary.
+
         :param file_path: Path to JSON file.
         :return: Deserialized JSON document into dictionary.
         """
