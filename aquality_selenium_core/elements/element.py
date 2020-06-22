@@ -1,6 +1,6 @@
+"""Abstraction for any custom element of the web, desktop of mobile application."""
 from abc import ABC
 from abc import abstractmethod
-from datetime import timedelta
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -19,17 +19,18 @@ from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
-from aquality_selenium_core.logging.logger import Logger
+from aquality_selenium_core.logger.logger import Logger
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
-class Element(ABC):
+class AbstractElement(ABC):
     """Base class for any custom element."""
 
     def __init__(self, locator: By, name: str, state: ElementState):
+        """Initialize element with locator, name and state."""
         self._locator = locator
         self._name = name
         self._state = state
@@ -55,20 +56,10 @@ class Element(ABC):
     @property
     def state(self) -> AbstractElementStateProvider:
         """
-        Provides ability to define of element's state (whether it is displayed, exists or not)
-        and respective waiting functions.
+        Get element state provider.
+
+        Provider allows to define element's state (whether it is displayed, exists or not).
         :return: Provider to define element's state.
-        """
-        raise NotImplementedError
-
-    @property
-    def element(self, timeout: timedelta = None) -> WebElement:
-        """
-        Get current element by specified locator.
-
-        Default timeout is provided in TimeoutConfiguration.
-        Throws NoSuchElementException if element not found.
-        :return: Instance of WebElement if found.
         """
         raise NotImplementedError
 
@@ -78,6 +69,16 @@ class Element(ABC):
         Get text of item (inner text).
 
         :return: Text of element.
+        """
+        raise NotImplementedError
+
+    def element(self, timeout: int = 0) -> WebElement:
+        """
+        Get current element by specified locator.
+
+        Default timeout is provided in TimeoutConfiguration.
+        Throws NoSuchElementException if element not found.
+        :return: Instance of WebElement if found.
         """
         raise NotImplementedError
 
