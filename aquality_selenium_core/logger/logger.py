@@ -1,12 +1,15 @@
-"""Module defines wrapper for logging."""
+"""Module defines wrapper for logger."""
 import logging.config
 from logging import Handler
 from typing import Any
 from typing import Dict
-from typing import Type
+from typing import TYPE_CHECKING
 
 from aquality_selenium_core.utilities.file_utils import FileUtils
 from aquality_selenium_core.utilities.resource_file import ResourceFile
+
+if TYPE_CHECKING:
+    from typing import Type
 
 
 class Singleton(type):
@@ -44,5 +47,5 @@ class Logger(metaclass=Singleton):
         self._logger.removeHandler(handler)
 
     def __getattr__(self, item):
-        """Get object attribute. Delegate to initialized logging instance if attribute is not defined."""
+        """Get object attribute. Delegate to initialized logger instance if attribute is not defined."""
         return getattr(self._logger, item)

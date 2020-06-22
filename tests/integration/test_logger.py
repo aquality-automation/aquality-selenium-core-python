@@ -1,7 +1,7 @@
 from logging import DEBUG
 from logging import FileHandler
 
-from aquality_selenium_core.logging.logger import Logger
+from aquality_selenium_core.logger.logger import Logger
 
 logger = Logger()
 
