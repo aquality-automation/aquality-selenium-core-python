@@ -1,4 +1,4 @@
-"""Module defines wrapper for logger."""
+"""Module defines wrapper for logging."""
 import logging.config
 from logging import Handler
 from typing import Any
