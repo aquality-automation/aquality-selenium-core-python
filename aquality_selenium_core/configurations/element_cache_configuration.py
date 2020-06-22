@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Module defines abstraction for element cache configuration."""
 from abc import ABC
 
 
-class ElementCacheConfiguration(ABC):
+class AbstractElementCacheConfiguration(ABC):
+    """Provides element's cache configuration."""
+
     pass

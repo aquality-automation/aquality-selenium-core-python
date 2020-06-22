@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Module defines waiting functionality."""
 from abc import ABC
 
 
-class ConditionalWait(ABC):
+class AbstractConditionalWait(ABC):
+    """Utility used to wait for some condition."""
+
     pass

@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Module defines abstraction for cached element handler."""
 from abc import ABC
 
 
-class ElementCacheHandler(ABC):
+class AbstractElementCacheHandler(ABC):
+    """Allows to use cached element."""
+
     pass
