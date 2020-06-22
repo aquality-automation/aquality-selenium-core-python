@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
+"""Module defines enumeration for element counts."""
 from enum import Enum
 
 
 class ElementsCount(Enum):
-    """
-    Possible count of elements.
-    """
+    """Enumeration with possible count of elements."""
 
     ZERO = 0
     MORE_THEN_ZERO = 1

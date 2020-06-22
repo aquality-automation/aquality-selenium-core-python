@@ -1,6 +1,8 @@
 """Abstraction for any custom element of the web, desktop of mobile application."""
 from abc import ABC
 from abc import abstractmethod
+from typing import Callable
+from typing import List
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -18,6 +20,8 @@ from aquality_selenium_core.elements.element_state import ElementState
 from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
+from aquality_selenium_core.elements.elements_count import ElementsCount
+from aquality_selenium_core.elements.parent import T
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
 from aquality_selenium_core.logger.logger import Logger
 from aquality_selenium_core.utilities.element_action_retrier import (
@@ -154,3 +158,26 @@ class AbstractElement(ABC):
     @property
     def _logger(self) -> Logger:
         raise NotImplementedError
+
+    def find_child_element(
+        self,
+        child_locator: By,
+        name: str = None,
+        supplier: Callable[[By, str, ElementState], T] = None,
+        state: ElementState = ElementState.DISPLAYED,
+    ) -> T:
+        return self._element_factory.find_child_element(
+            self, child_locator, name, supplier, state
+        )
+
+    def find_child_elements(
+        self,
+        child_locator: By,
+        name: str = None,
+        supplier: Callable[[By, str, ElementState], T] = None,
+        expected_count: ElementsCount = ElementsCount.ANY,
+        state: ElementState = ElementState.DISPLAYED,
+    ) -> List[T]:
+        return self._element_factory.find_child_elements(
+            self, child_locator, name, supplier, expected_count, state
+        )
