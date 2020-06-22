@@ -3,19 +3,15 @@ import logging.config
 from logging import Handler
 from typing import Any
 from typing import Dict
-from typing import TYPE_CHECKING
 
 from aquality_selenium_core.utilities.file_utils import FileUtils
 from aquality_selenium_core.utilities.resource_file import ResourceFile
-
-if TYPE_CHECKING:
-    from typing import Type
 
 
 class Singleton(type):
     """Class defines Singleton object."""
 
-    _instances: Dict[Type, Any] = {}
+    _instances: Dict[Any, Any] = {}
 
     def __call__(cls, *args, **kwargs):
         """Find existing instance or create a new one."""
