@@ -5,7 +5,7 @@ from datetime import timedelta
 from selenium.webdriver import Remote
 
 
-class Application(ABC):
+class AbstractApplication(ABC):
     """
     Interface of any application controlled by Selenium WebDriver API.
     """
