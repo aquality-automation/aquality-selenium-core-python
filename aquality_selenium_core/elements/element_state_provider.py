@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 from abc import ABC
 
 
-class ElementStateProvider(ABC):
+class AbstractElementStateProvider(ABC):
     pass

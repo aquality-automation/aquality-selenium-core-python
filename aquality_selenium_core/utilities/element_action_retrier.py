@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 from abc import ABC
 
 
-class ElementActionRetrier(ABC):
+class AbstractElementActionRetrier(ABC):
     pass

@@ -1,27 +1,33 @@
-# -*- coding: utf-8 -*-
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from datetime import timedelta
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from aquality_selenium_core.applications.application import Application
-from aquality_selenium_core.configurations.element_cache_configuration import ElementCacheConfiguration
-from aquality_selenium_core.elements.element_cache_handler import ElementCacheHandler
-from aquality_selenium_core.elements.element_factory import ElementFactory
-from aquality_selenium_core.elements.element_finder import ElementFinder
+from aquality_selenium_core.applications.application import AbstractApplication
+from aquality_selenium_core.configurations.element_cache_configuration import (
+    AbstractElementCacheConfiguration,
+)
+from aquality_selenium_core.elements.element_cache_handler import (
+    AbstractElementCacheHandler,
+)
+from aquality_selenium_core.elements.element_factory import AbstractElementFactory
+from aquality_selenium_core.elements.element_finder import AbstractElementFinder
 from aquality_selenium_core.elements.element_state import ElementState
-from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
-from aquality_selenium_core.localization.localized_logger import LocalizedLogger
+from aquality_selenium_core.elements.element_state_provider import (
+    AbstractElementStateProvider,
+)
+from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
 from aquality_selenium_core.logging.logger import Logger
-from aquality_selenium_core.utilities.element_action_retrier import ElementActionRetrier
-from aquality_selenium_core.waitings.conditional_wait import ConditionalWait
+from aquality_selenium_core.utilities.element_action_retrier import (
+    AbstractElementActionRetrier,
+)
+from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
 class Element(ABC):
-    """
-    Base class for any custom element.
-    """
+    """Base class for any custom element."""
 
     def __init__(self, locator: By, name: str, state: ElementState):
         self._locator = locator
@@ -31,7 +37,8 @@ class Element(ABC):
     @property
     def locator(self) -> By:
         """
-        Gets unique locator of element.
+        Get unique locator of element.
+
         :return: Element locator.
         """
         return self._locator
@@ -39,13 +46,14 @@ class Element(ABC):
     @property
     def name(self) -> str:
         """
-        Gets unique name of element.
+        Get unique name of element.
+
         :return: Element name.
         """
         return self._name
 
     @property
-    def state(self) -> ElementStateProvider:
+    def state(self) -> AbstractElementStateProvider:
         """
         Provides ability to define of element's state (whether it is displayed, exists or not)
         and respective waiting functions.
@@ -56,7 +64,8 @@ class Element(ABC):
     @property
     def element(self, timeout: timedelta = None) -> WebElement:
         """
-        Gets current element by specified locator.
+        Get current element by specified locator.
+
         Default timeout is provided in TimeoutConfiguration.
         Throws NoSuchElementException if element not found.
         :return: Instance of WebElement if found.
@@ -66,14 +75,16 @@ class Element(ABC):
     @property
     def text(self) -> str:
         """
-        Gets the item text (inner text).
+        Get text of item (inner text).
+
         :return: Text of element.
         """
         raise NotImplementedError
 
     def get_attribute(self, attr: str) -> str:
         """
-        Gets attribute value of the element.
+        Get attribute value of the element.
+
         :param attr: Attribute name.
         :return: Attribute value.
         """
@@ -81,15 +92,14 @@ class Element(ABC):
 
     def send_keys(self, keys: str) -> None:
         """
-        Sends keys.
+        Send keys.
+
         :param keys: keys for sending.
         """
         raise NotImplementedError
 
     def click(self) -> None:
-        """
-        Clicks on the item.
-        """
+        """Click on the item."""
         raise NotImplementedError
 
     @property
@@ -98,37 +108,37 @@ class Element(ABC):
 
     @property
     @abstractmethod
-    def _application(self) -> Application:
+    def _application(self) -> AbstractApplication:
         pass
 
     @property
     @abstractmethod
-    def _element_factory(self) -> ElementFactory:
+    def _element_factory(self) -> AbstractElementFactory:
         pass
 
     @property
     @abstractmethod
-    def _element_finder(self) -> ElementFinder:
+    def _element_finder(self) -> AbstractElementFinder:
         pass
 
     @property
     @abstractmethod
-    def _element_cache_configuration(self) -> ElementCacheConfiguration:
+    def _element_cache_configuration(self) -> AbstractElementCacheConfiguration:
         pass
 
     @property
     @abstractmethod
-    def _element_action_retrier(self) -> ElementActionRetrier:
+    def _element_action_retrier(self) -> AbstractElementActionRetrier:
         pass
 
     @property
     @abstractmethod
-    def _localized_logger(self) -> LocalizedLogger:
+    def _localized_logger(self) -> AbstractLocalizedLogger:
         pass
 
     @property
     @abstractmethod
-    def _conditional_wait(self) -> ConditionalWait:
+    def _conditional_wait(self) -> AbstractConditionalWait:
         pass
 
     @property
@@ -137,7 +147,7 @@ class Element(ABC):
         pass
 
     @property
-    def _cache(self) -> ElementCacheHandler:
+    def _cache(self) -> AbstractElementCacheHandler:
         raise NotImplementedError
 
     @property
