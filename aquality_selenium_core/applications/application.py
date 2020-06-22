@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from datetime import timedelta
 
 from selenium.webdriver import Remote
