@@ -20,8 +20,8 @@ class AbstractParent(ABC):
     def find_child_element(
         self,
         child_locator: By,
-        name: str = "",
-        supplier: Callable[[By, str, ElementState], T] = None,
+        name: str,
+        supplier: Callable[[By, str, ElementState], T],
         state: ElementState = ElementState.DISPLAYED,
     ) -> T:
         """
@@ -39,8 +39,8 @@ class AbstractParent(ABC):
     def find_child_elements(
         self,
         child_locator: By,
-        name: str = "",
-        supplier: Callable[[By, str, ElementState], T] = None,
+        name: str,
+        supplier: Callable[[By, str, ElementState], T],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
     ) -> List[T]:

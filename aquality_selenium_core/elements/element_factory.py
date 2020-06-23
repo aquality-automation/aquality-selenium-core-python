@@ -39,8 +39,8 @@ class AbstractElementFactory(ABC):
         self,
         parent_element: AbstractElement,
         child_locator: By,
-        name: str = "",
-        supplier: Callable[[By, str, ElementState], T] = None,
+        name: str,
+        supplier: Callable[[By, str, ElementState], T],
         state: ElementState = ElementState.DISPLAYED,
     ) -> T:
         """
@@ -48,9 +48,9 @@ class AbstractElementFactory(ABC):
 
         :param parent_element: Parent element.
         :param child_locator: Locator of child element relative to its parent.
-        :param name: Delegate that defines constructor of element in case of custom element.
-        :param supplier: Child element state.
-        :param state: Child element name.
+        :param name: Child element name.
+        :param supplier: Delegate that defines constructor of element in case of custom element.
+        :param state: Child element state.
         :return: Instance of child element.
         """
         pass
@@ -60,8 +60,8 @@ class AbstractElementFactory(ABC):
         self,
         parent_element: AbstractElement,
         child_locator: By,
-        name: str = "",
-        supplier: Callable[[By, str, ElementState], T] = None,
+        name: str,
+        supplier: Callable[[By, str, ElementState], T],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
     ) -> List[T]:
@@ -70,10 +70,10 @@ class AbstractElementFactory(ABC):
 
         :param parent_element: Parent element.
         :param child_locator: Locator of child element relative to its parent.
-        :param name: Delegate that defines constructor of element in case of custom element.
-        :param supplier: Child element state.
+        :param name: Child element name.
+        :param supplier: Delegate that defines constructor of element in case of custom element.
         :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
-        :param state: Child element name.
+        :param state: Child element state.
         :return: Instance of child element.
         """
         pass
@@ -83,7 +83,7 @@ class AbstractElementFactory(ABC):
         self,
         locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T] = None,
+        supplier: Callable[[By, str, ElementState], T],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
     ) -> T:
