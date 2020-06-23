@@ -6,12 +6,13 @@ import pytest
 from hamcrest import assert_that
 from hamcrest import calling
 from hamcrest import equal_to
+from hamcrest import not_none
 from hamcrest import raises
 
 from aquality_selenium_core.exceptions.illegal_argument_exception import (
     IllegalArgumentException,
 )
-from aquality_selenium_core.utilities.abstract_settings_file import AbstractSettingsFile
+from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 from tests.utilities_tests.settings_file_tests.test_keys import TestKeys
 
 
@@ -32,13 +33,15 @@ class TestsSettingsFiles:
         self, get_test_profile
     ):
         assert_that(
-            not get_test_profile.is_value_present(TestKeys.ABSENTVALUE_PATH),
+            get_test_profile.is_value_present(TestKeys.ABSENTVALUE_PATH),
+            equal_to(False),
             "value should be absent by default",
         )
         target_value: str = str(True)
         os.environ[TestKeys.ABSENTVALUE_PATH] = target_value
         assert_that(
             get_test_profile.is_value_present(TestKeys.ABSENTVALUE_PATH),
+            equal_to(True),
             "value should be present after set",
         )
         assert_that(
@@ -82,7 +85,7 @@ class TestsSettingsFiles:
         expected_arguments: List[str] = ["first", "second"]
         arguments: List[str] = get_test_profile.get_list(arguments_path)
 
-        assert_that(arguments is not None)
+        assert_that(arguments, not_none(), "Arguments list is none")
         assert_that(
             arguments,
             equal_to(expected_arguments),
@@ -93,7 +96,7 @@ class TestsSettingsFiles:
         new_args: str = "firstNew,secondNew"
         os.environ[TestKeys.ARGUMENTS_ENV_KEY] = new_args
         arguments = get_test_profile.get_list(arguments_path)
-        assert_that(arguments is not None)
+        assert_that(arguments, not_none(), "Arguments list is none")
         assert_that(
             arguments,
             equal_to(expected_arguments),
@@ -105,7 +108,8 @@ class TestsSettingsFiles:
 
         languages = get_test_profile.get_dictionary(logger_path)
 
-        assert_that(languages is not None)
+        assert_that(languages, not_none(), "Languages list is none")
+
         assert_that(
             languages,
             equal_to(TestKeys.EXPECTED_LANGUAGES),
@@ -117,7 +121,8 @@ class TestsSettingsFiles:
         os.environ[TestKeys.LANGUAGE_ENV_KEY] = new_language_value
         languages = get_test_profile.get_dictionary(logger_path)
 
-        assert_that(languages is not None)
+        assert_that(languages, not_none(), "Languages list is none")
+
         assert_that(
             languages,
             equal_to(expected_languages),
@@ -138,7 +143,8 @@ class TestsSettingsFiles:
         wrong_path: str = "blabla"
         is_wrong_path_present: bool = get_test_profile.is_value_present(wrong_path)
         assert_that(
-            not is_wrong_path_present,
+            is_wrong_path_present,
+            equal_to(False),
             f"{wrong_path} value should not be present in settings file {TestKeys.FILE_NAME}",
         )
 
@@ -150,6 +156,7 @@ class TestsSettingsFiles:
         )
         assert_that(
             is_null_value_present,
+            equal_to(True),
             f"{TestKeys.NULLVALUE_PATH} value should be present in settings file {TestKeys.FILE_NAME}",
         )
 
