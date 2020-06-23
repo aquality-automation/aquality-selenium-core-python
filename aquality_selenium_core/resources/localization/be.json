@@ -1,0 +1,13 @@
+{
+  "loc.clicking": "Націскаем",
+  "loc.el.getattr": "Атрымліваем атрыбут '%s'",
+  "loc.get.text": "Атрымліваем тэкст элемента",
+  "loc.text.sending.keys": "Націскаем клавішы '%s'",
+  "loc.no.elements.found.in.state": "Не знайшлі элементаў па лакатару '%s' у %s стане",
+  "loc.no.elements.found.by.locator": "Не знайшлі элементаў па лакатару '%s'",
+  "loc.elements.were.found.but.not.in.state": "Знайшлі элементы па лакатару '%s', але яны не ў жаданым стане %s",
+  "loc.elements.found.but.should.not": "Не павінна быць знойдзена элементаў па лакатару '%s' у %s стане",
+  "loc.search.of.elements.failed": "Пошук элемента па лакатару '%s' прайшоў няўдала",
+  "loc.element.not.in.state": "Элемент %s не стаў %s пасля таймаўта %s",
+  "loc.get.page.source.failed": "Адбылася памылка ў час атрымання разметкі старонкі"
+}

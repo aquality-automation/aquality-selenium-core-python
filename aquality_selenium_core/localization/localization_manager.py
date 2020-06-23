@@ -30,8 +30,9 @@ class LocalizationManager(AbstractLocalizationManager):
         self, logger_configuration: AbstractLoggerConfiguration, logger: Logger
     ):
         """Initialize manager with configuration and logger."""
-        self._logger_configuration = logger_configuration
-        self._logger = logger
+        self.__logger_configuration = logger_configuration
+        self.__logger = logger
+        self.__localization_resource_name = ""  # TODO: implement me
 
     def get_localized_message(self, message_key: str, *args) -> str:
         """
@@ -42,3 +43,9 @@ class LocalizationManager(AbstractLocalizationManager):
         :return: Localized message.
         """
         raise NotImplementedError
+        self.__logger.warn(
+            "Cannot find localized message by key '%s' in resource file '%s'",
+            message_key,
+            self.__localization_resource_name,
+        )
+        return message_key
