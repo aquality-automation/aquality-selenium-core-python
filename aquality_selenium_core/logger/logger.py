@@ -42,6 +42,52 @@ class Logger(metaclass=Singleton):
         """Remove handler from "aquality" logger."""
         self._logger.removeHandler(handler)
 
-    def __getattr__(self, item):
-        """Get object attribute. Delegate to initialized logger instance if attribute is not defined."""
-        return getattr(self._logger, item)
+    def info(self, msg: str, *args, **kwargs) -> None:
+        """
+        Log message with INFO level.
+
+        :param msg: Log message:
+        :param args: Arguments for message.
+        :param kwargs: Arguments for logger.
+        """
+        self._logger.info(msg, *args, **kwargs)
+
+    def debug(self, msg: str, *args, **kwargs) -> None:
+        """
+        Log message with DEBUG level.
+
+        :param msg: Log message:
+        :param args: Arguments for message.
+        :param kwargs: Arguments for logger.
+        """
+        self._logger.debug(msg, *args, **kwargs)
+
+    def warn(self, msg: str, *args, **kwargs) -> None:
+        """
+        Log message with INFO level.
+
+        :param msg: Log message:
+        :param args: Arguments for message.
+        :param kwargs: Arguments for logger.
+        """
+        self._logger.warning(msg, *args, **kwargs)
+
+    def error(self, msg: str, *args, **kwargs) -> None:
+        """
+        Log message with INFO level.
+
+        :param msg: Log message:
+        :param args: Arguments for message.
+        :param kwargs: Arguments for logger.
+        """
+        self._logger.error(msg, *args, **kwargs)
+
+    def fatal(self, msg: str, *args, **kwargs) -> None:
+        """
+        Log message with INFO level.
+
+        :param msg: Log message:
+        :param args: Arguments for message.
+        :param kwargs: Arguments for logger.
+        """
+        self._logger.exception(msg, *args, exc_info=True, **kwargs)
