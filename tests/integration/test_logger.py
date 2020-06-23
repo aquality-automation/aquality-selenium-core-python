@@ -1,6 +1,10 @@
 from logging import DEBUG
 from logging import FileHandler
 
+from hamcrest import assert_that
+from hamcrest import contains_string
+from hamcrest import is_not
+
 from aquality_selenium_core.logger.logger import Logger
 
 logger = Logger()
@@ -18,7 +22,9 @@ class TestLogger:
         logger.info(log_message)
 
         log_data = self._read_file_data(HANDLER_TEST_LOG_FILE_NAME)
-        assert log_message in log_data
+        assert_that(
+            log_data, contains_string(log_message), "Log message not found in log file"
+        )
 
     def test_should_be_possible_to_remove_handler(self):
         log_message = "Remove handler test message"
@@ -27,7 +33,11 @@ class TestLogger:
         logger.info(log_message)
 
         log_data = self._read_file_data(HANDLER_TEST_LOG_FILE_NAME)
-        assert log_message not in log_data
+        assert_that(
+            log_data,
+            is_not(contains_string(log_message)),
+            "Log message not found in log file",
+        )
 
     @staticmethod
     def _read_file_data(file_name):
