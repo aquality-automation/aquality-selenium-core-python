@@ -1,4 +1,6 @@
-from aquality_selenium_core.utilities.abstract_utilities_module import AbstractUtilitiesModule
+from aquality_selenium_core.utilities.abstract_utilities_module import (
+    AbstractUtilitiesModule,
+)
 
 
 class ResourceInstanceMock:
