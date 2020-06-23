@@ -39,7 +39,7 @@ class AbstractElementFactory(ABC):
         self,
         parent_element: AbstractElement,
         child_locator: By,
-        name: str = None,
+        name: str = "",
         supplier: Callable[[By, str, ElementState], T] = None,
         state: ElementState = ElementState.DISPLAYED,
     ) -> T:
@@ -60,7 +60,7 @@ class AbstractElementFactory(ABC):
         self,
         parent_element: AbstractElement,
         child_locator: By,
-        name: str = None,
+        name: str = "",
         supplier: Callable[[By, str, ElementState], T] = None,
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
