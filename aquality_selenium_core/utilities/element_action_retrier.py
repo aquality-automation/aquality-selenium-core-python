@@ -1,5 +1,8 @@
 """Module defines abstraction for retry functionality."""
 from abc import ABC
+from typing import TypeVar
+
+T = TypeVar("T")
 
 
 class AbstractElementActionRetrier(ABC):
