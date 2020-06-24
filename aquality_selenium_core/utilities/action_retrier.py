@@ -1,12 +1,15 @@
 """Module defines work with repeated actions."""
 from abc import ABC
 from abc import abstractmethod
-from typing import Any
+from typing import Callable
 from typing import List
 from typing import Type
+from typing import TypeVar
 
 from selenium.common.exceptions import InvalidElementStateException
 from selenium.common.exceptions import StaleElementReferenceException
+
+T = TypeVar("T")
 
 
 class AbstractActionRetrier(ABC):
@@ -15,13 +18,13 @@ class AbstractActionRetrier(ABC):
     @abstractmethod
     def do_with_retry(
         self,
-        function_and_args: List[Type[Any]],
-        handled_exceptions: List[Type[Exception]],
-    ) -> Any:
+        function: Callable[..., T],
+        handled_exceptions: List[Type[Exception]] = [],
+    ) -> T:
         """
         Try to execute function repeatedly.
 
-        :param function_and_args: Function to retry with arguments.
+        :param function: Function to retry.
         :param handled_exceptions: Exceptions which will be catches during function execution.
         :return: Result of executed function.
         """
@@ -34,19 +37,20 @@ class AbstractElementActionRetrier(AbstractActionRetrier, ABC):
     @abstractmethod
     def do_with_retry(
         self,
-        function_and_args: List[Type[Any]],
-        handled_exceptions: List[Type[Exception]],
-    ) -> Any:
+        function: Callable[..., T],
+        handled_exceptions: List[Type[Exception]] = [],
+    ) -> T:
         """
         Try to execute function related to element actions.
 
-        :param function_and_args: Function to retry with arguments.
+        :param function: Function to retry.
         :param handled_exceptions: Exceptions which will be catches during function execution.
         :return: Result of executed function.
         """
         pass
 
-    def get_handled_exceptions(self) -> List[Type[Exception]]:
+    @staticmethod
+    def get_handled_exceptions() -> List[Type[Exception]]:
         """
         Return supported exceptions.
 
