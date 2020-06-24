@@ -20,17 +20,16 @@ class AbstractConditionalWait(ABC):
         condition: Callable[..., bool],
         timeout: int = 0,
         polling_interval: int = 0,
-        message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
         Wait for some condition within timeout.
 
-        :param condition: Function for waiting
-        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
-        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
-        :param message: Part of error message in case of Timeout exception.
-        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
+        :param condition:               Function for waiting
+        :param timeout:                 Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval:        Condition check interval (in milliseconds). Default value is taken
+                                        from configuration.
+        :param exceptions_to_ignore:    Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
         """
         pass
@@ -70,7 +69,6 @@ class ConditionalWait(AbstractConditionalWait):
         condition: Callable[..., bool],
         timeout: int = 0,
         polling_interval: int = 0,
-        message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
@@ -79,14 +77,16 @@ class ConditionalWait(AbstractConditionalWait):
         :param condition: Function for waiting
         :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
         :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
-        :param message: Part of error message in case of Timeout exception.
         :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
         """
 
         def func():
             self.wait_for_true(
-                condition, timeout, polling_interval, message, exceptions_to_ignore
+                condition,
+                timeout,
+                polling_interval,
+                exceptions_to_ignore=exceptions_to_ignore,
             )
             return True
 
