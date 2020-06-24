@@ -27,8 +27,8 @@ class AbstractConditionalWait(ABC):
         Wait for some condition within timeout.
 
         :param condition: Function for waiting
-        :param timeout: Condition timeout. Default value is taken from configuration.
-        :param polling_interval: Condition check interval. Default value is taken from configuration.
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
         :param message: Part of error message in case of Timeout exception.
         :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
@@ -48,8 +48,8 @@ class AbstractConditionalWait(ABC):
         Wait for some condition within timeout.
 
         :param condition: Predicate for waiting.
-        :param timeout: Condition timeout. Default value is taken from configuration.
-        :param polling_interval: Condition check interval. Default value is taken from configuration.
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
         :param message: Part of error message in case of Timeout exception.
         :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         """
@@ -77,8 +77,8 @@ class ConditionalWait(AbstractConditionalWait):
         Wait for some condition within timeout.
 
         :param condition: Function for waiting
-        :param timeout: Condition timeout. Default value is taken from configuration.
-        :param polling_interval: Condition check interval. Default value is taken from configuration.
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
         :param message: Part of error message in case of Timeout exception.
         :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
@@ -104,8 +104,8 @@ class ConditionalWait(AbstractConditionalWait):
         Wait for some condition within timeout.
 
         :param condition: Predicate for waiting.
-        :param timeout: Condition timeout. Default value is taken from configuration.
-        :param polling_interval: Condition check interval. Default value is taken from configuration.
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
         :param message: Part of error message in case of Timeout exception.
         :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         """
@@ -118,12 +118,12 @@ class ConditionalWait(AbstractConditionalWait):
                 return
 
             current_time = time.time()
-            if current_time - start_time > timeout:
+            if (current_time - start_time) > timeout:
                 raise TimeoutError(
                     f"Timed out after {wait_timeout} seconds during wait for condition '{message}'"
                 )
 
-            time.sleep(check_interval)
+            time.sleep(check_interval / 1000)
 
     @staticmethod
     def __is_condition_satisfied(
