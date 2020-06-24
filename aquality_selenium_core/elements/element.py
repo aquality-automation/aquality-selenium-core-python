@@ -19,7 +19,6 @@ from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
-from aquality_selenium_core.logger.logger import Logger
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
