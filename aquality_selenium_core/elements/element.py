@@ -150,7 +150,3 @@ class AbstractElement(ABC):
     @property
     def _cache(self) -> AbstractElementCacheHandler:
         raise NotImplementedError
-
-    @property
-    def _logger(self) -> Logger:
-        raise NotImplementedError
