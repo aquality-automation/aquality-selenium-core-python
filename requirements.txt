@@ -1,6 +1,0 @@
-pytest==5.4.3
-selenium==3.141.0
-jsonpath-ng==1.5.1
-PyHamcrest==2.0.2
-rootpath==0.1.1
-duration==1.1.1

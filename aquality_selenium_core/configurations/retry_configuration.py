@@ -1,5 +1,3 @@
-import duration
-
 from aquality_selenium_core.configurations.abc_retry_configuration import AbcRetryConfiguration
 from aquality_selenium_core.configurations.duration import Duration
 from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
@@ -22,4 +20,3 @@ class RetryConfiguration(AbcRetryConfiguration):
     @property
     def polling_interval(self) -> Duration:
         return self.__polling_interval
-
