@@ -2,7 +2,7 @@
 from abc import ABC
 from typing import TypeVar
 
-T = TypeVar("T")
+TReturn = TypeVar("TReturn")
 
 
 class AbstractElementActionRetrier(ABC):
