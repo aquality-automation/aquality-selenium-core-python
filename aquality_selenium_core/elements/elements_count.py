@@ -6,5 +6,5 @@ class ElementsCount(Enum):
     """Enumeration with possible count of elements."""
 
     ZERO = 0
-    MORE_THEN_ZERO = 1
+    MORE_THAN_ZERO = 1
     ANY = 2

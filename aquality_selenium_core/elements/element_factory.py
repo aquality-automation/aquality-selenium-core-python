@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from aquality_selenium_core.elements.element import AbstractElement
 from aquality_selenium_core.elements.element_state import ElementState
 from aquality_selenium_core.elements.elements_count import ElementsCount
-from aquality_selenium_core.elements.parent import T
+from aquality_selenium_core.elements.parent import TElement
 
 
 class AbstractElementFactory(ABC):
@@ -18,11 +18,11 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def get_custom_element(
         self,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         locator: By,
         name: str,
         state: ElementState = ElementState.DISPLAYED,
-    ) -> T:
+    ) -> TElement:
         """
         Create custom element according to passed parameters.
 
@@ -40,9 +40,9 @@ class AbstractElementFactory(ABC):
         parent_element: AbstractElement,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         state: ElementState = ElementState.DISPLAYED,
-    ) -> T:
+    ) -> TElement:
         """
         Find child element by its locator relative to parent element.
 
@@ -61,10 +61,10 @@ class AbstractElementFactory(ABC):
         parent_element: AbstractElement,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
-    ) -> List[T]:
+    ) -> List[TElement]:
         """
         Find child element by its locator relative to parent element.
 
@@ -72,7 +72,7 @@ class AbstractElementFactory(ABC):
         :param child_locator: Locator of child element relative to its parent.
         :param name: Child element name.
         :param supplier: Delegate that defines constructor of element in case of custom element.
-        :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Child element state.
         :return: Instance of child element.
         """
@@ -83,17 +83,17 @@ class AbstractElementFactory(ABC):
         self,
         locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
-    ) -> T:
+    ) -> TElement:
         """
         Find list of elements by base locator.
 
         :param locator: Base elements locator.
         :param name: Elements name.
         :param supplier: Delegate that defines constructor of element in case of custom elements.
-        :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Elements state.
         :return: List of elements that found by locator.
         """

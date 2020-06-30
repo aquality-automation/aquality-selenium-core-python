@@ -21,12 +21,12 @@ from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
 from aquality_selenium_core.elements.elements_count import ElementsCount
-from aquality_selenium_core.elements.parent import T
+from aquality_selenium_core.elements.parent import TElement
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
-from aquality_selenium_core.utilities.element_action_retrier import T
+from aquality_selenium_core.utilities.element_action_retrier import TReturn
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
@@ -176,18 +176,18 @@ class AbstractElement(ABC):
     def _log_element_action(self, message_key: str, *args, **kwargs) -> None:
         raise NotImplementedError
 
-    def _do_with_retry(self, expression: Callable[..., T]) -> T:
+    def _do_with_retry(self, expression: Callable[..., TReturn]) -> TReturn:
         raise NotImplementedError
 
     def find_child_element(
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         state: ElementState = ElementState.DISPLAYED,
-    ) -> T:
+    ) -> TElement:
         """
-        Find child element ot type T of current element by its locator.
+        Find the child element of type TElement of current element by its locator.
 
         :param child_locator: Locator of child element.
         :param name: Child element name.
@@ -203,17 +203,17 @@ class AbstractElement(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
-    ) -> List[T]:
+    ) -> List[TElement]:
         """
         Find child elements of current element by its locator.
 
         :param child_locator: Locator of child elements relative to their parent.
         :param name: Child elements name.
         :param supplier: Delegate that defines constructor of child element in case of custom element type.
-        :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Child elements state.
         :return: List of child elements.
         """

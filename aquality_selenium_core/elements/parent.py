@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from aquality_selenium_core.elements.element_state import ElementState
 from aquality_selenium_core.elements.elements_count import ElementsCount
 
-T = TypeVar("T")
+TElement = TypeVar("TElement")
 
 
 class AbstractParent(ABC):
@@ -21,11 +21,11 @@ class AbstractParent(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         state: ElementState = ElementState.DISPLAYED,
-    ) -> T:
+    ) -> TElement:
         """
-        Find child element ot type T of current element by its locator.
+        Find child element ot type TElement of current element by its locator.
 
         :param child_locator: Locator of child element.
         :param name: Child element name.
@@ -40,17 +40,17 @@ class AbstractParent(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], T],
+        supplier: Callable[[By, str, ElementState], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: ElementState = ElementState.DISPLAYED,
-    ) -> List[T]:
+    ) -> List[TElement]:
         """
-        Find child elements of current element by its locator.
+        Find child elements of type TElement of current element by its locator.
 
         :param child_locator: Locator of child elements relative to their parent.
         :param name: Child elements name.
         :param supplier: Delegate that defines constructor of child element in case of custom element type.
-        :param expected_count: Expected number of elements that have to be found (zero, more then zero, any).
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Child elements state.
         :return: List of child elements.
         """
