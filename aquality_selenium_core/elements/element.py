@@ -23,10 +23,10 @@ from aquality_selenium_core.elements.element_state_provider import (
 from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import T
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
-from aquality_selenium_core.logger.logger import Logger
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
+from aquality_selenium_core.utilities.element_action_retrier import T
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
@@ -74,17 +74,10 @@ class AbstractElement(ABC):
 
         :return: Text of element.
         """
-        raise NotImplementedError
-
-    def element(self, timeout: int = 0) -> WebElement:
-        """
-        Get current element by specified locator.
-
-        Default timeout is provided in TimeoutConfiguration.
-        Throws NoSuchElementException if element not found.
-        :return: Instance of WebElement if found.
-        """
-        raise NotImplementedError
+        self._log_element_action("loc.get.text")
+        value = self._do_with_retry(lambda: str(self.get_element().text))
+        self._log_element_action("loc.text.value", value)
+        return value
 
     def get_attribute(self, attr: str) -> str:
         """
@@ -93,7 +86,10 @@ class AbstractElement(ABC):
         :param attr: Attribute name.
         :return: Attribute value.
         """
-        raise NotImplementedError
+        self._log_element_action("loc.el.getattr", attr)
+        value = self._do_with_retry(lambda: str(self.get_element().get_attribute(attr)))
+        self._log_element_action("loc.el.attr.value", attr, value)
+        return value
 
     def send_keys(self, keys: str) -> None:
         """
@@ -101,10 +97,32 @@ class AbstractElement(ABC):
 
         :param keys: keys for sending.
         """
-        raise NotImplementedError
+        self._log_element_action("loc.text.sending.keys", keys)
+
+        def func():
+            self.get_element().send_keys(keys)
+            return True
+
+        self._do_with_retry(func)
 
     def click(self) -> None:
         """Click on the item."""
+        self._log_element_action("loc.clicking")
+
+        def func():
+            self.get_element().click()
+            return True
+
+        self._do_with_retry(func)
+
+    def get_element(self, timeout: int = 0) -> WebElement:
+        """
+        Get current element by specified locator.
+
+        Default timeout is provided in TimeoutConfiguration.
+        Throws NoSuchElementException if element not found.
+        :return: Instance of WebElement if found.
+        """
         raise NotImplementedError
 
     @property
@@ -155,8 +173,10 @@ class AbstractElement(ABC):
     def _cache(self) -> AbstractElementCacheHandler:
         raise NotImplementedError
 
-    @property
-    def _logger(self) -> Logger:
+    def _log_element_action(self, message_key: str, *args, **kwargs) -> None:
+        raise NotImplementedError
+
+    def _do_with_retry(self, expression: Callable[..., T]) -> T:
         raise NotImplementedError
 
     def find_child_element(

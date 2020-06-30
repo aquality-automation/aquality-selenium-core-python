@@ -3,7 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 
-from selenium.webdriver import Remote
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class AbstractApplication(ABC):
@@ -11,10 +11,11 @@ class AbstractApplication(ABC):
 
     @property
     @abstractmethod
-    def driver(self) -> Remote:
+    def driver(self) -> WebDriver:
         """:return: Current instance of driver."""
         pass
 
+    @property
     @abstractmethod
     def is_started(self) -> bool:
         """:return: Is the application already running or not."""
