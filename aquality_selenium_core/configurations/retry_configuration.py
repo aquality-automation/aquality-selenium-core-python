@@ -1,15 +1,30 @@
-from aquality_selenium_core.configurations.abc_retry_configuration import AbcRetryConfiguration
+from abc import ABC
+from abc import abstractmethod
+
 from aquality_selenium_core.configurations.duration import Duration
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
+from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 
 
-class RetryConfiguration(AbcRetryConfiguration):
+class AbstractRetryConfiguration(ABC):
+    @property
+    @abstractmethod
+    def number(self) -> int:
+        pass
 
-    def __init__(self, settings_file: AbcSettingsFile):
+    @property
+    @abstractmethod
+    def polling_interval(self) -> Duration:
+        pass
+
+
+class RetryConfiguration(AbstractRetryConfiguration):
+    def __init__(self, settings_file: AbstractSettingsFile):
         self.__settings_file = settings_file
-        self.__number = self.__settings_file.get_value('retry.number')
-        a = self.__settings_file.get_value('retry.pollingInterval')
-        self.__polling_interval = Duration(seconds=self.__settings_file.get_value('retry.pollingInterval'))
+        self.__number = self.__settings_file.get_value("retry.number")
+        a = self.__settings_file.get_value("retry.pollingInterval")
+        self.__polling_interval = Duration(
+            seconds=self.__settings_file.get_value("retry.pollingInterval")
+        )
         b = self.__polling_interval.milliseconds
         print(1)
 

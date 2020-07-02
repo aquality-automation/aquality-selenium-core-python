@@ -3,12 +3,12 @@ from typing import Generator
 
 import pytest
 
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
 from aquality_selenium_core.utilities.resource_instance_mock import ResourceInstanceMock
+from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 
 
 @pytest.fixture(scope="function")
-def get_profile() -> Generator[AbcSettingsFile, None, None]:
+def get_profile() -> Generator[AbstractSettingsFile, None, None]:
     yield ResourceInstanceMock.get_resource_instance()
 
 

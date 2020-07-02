@@ -3,10 +3,8 @@ from abc import ABC
 from abc import abstractmethod
 from enum import Enum
 
-import duration
-
-from aquality_selenium_core.configurations.abc_timeout_configuration import AbcTimeoutConfiguration
 from aquality_selenium_core.configurations.duration import Duration
+from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 
 
 class AbstractTimeoutConfiguration(ABC):
@@ -38,11 +36,12 @@ class AbstractTimeoutConfiguration(ABC):
 
 
 class TimeoutConfiguration(AbstractTimeoutConfiguration):
-
-    def __init__(self, settings_file: AbcSettingsFile):
+    def __init__(self, settings_file: AbstractSettingsFile):
         self.__settings_file = settings_file
         self.__condition: Duration = self.__get_duration_from_seconds(TimeOut.CONDITION)
-        self.__polling_interval: Duration = Duration(milliseconds=self.__get_time_out(TimeOut.POLL_INTERVAL))
+        self.__polling_interval: Duration = Duration(
+            milliseconds=self.__get_time_out(TimeOut.POLL_INTERVAL)
+        )
         self.__implicit: Duration = self.__get_duration_from_seconds(TimeOut.IMPLICIT)
         self.__command: Duration = self.__get_duration_from_seconds(TimeOut.COMMAND)
 
@@ -70,7 +69,7 @@ class TimeoutConfiguration(AbstractTimeoutConfiguration):
 
 
 class TimeOut(Enum):
-    IMPLICIT = 'timeouts.timeoutImplicit'
-    CONDITION = 'timeouts.timeoutCondition'
-    POLL_INTERVAL = 'timeouts.timeoutPollingInterval'
-    COMMAND = 'timeouts/timeoutCommand'
+    IMPLICIT = "timeouts.timeoutImplicit"
+    CONDITION = "timeouts.timeoutCondition"
+    POLL_INTERVAL = "timeouts.timeoutPollingInterval"
+    COMMAND = "timeouts/timeoutCommand"

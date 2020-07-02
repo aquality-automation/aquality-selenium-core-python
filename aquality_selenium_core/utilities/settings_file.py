@@ -1,9 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from abc import ABC
+from abc import abstractmethod
+from typing import Any
+from typing import Dict
+from typing import List
 
 
-class AbcSettingsFile(ABC):
-
+class AbstractSettingsFile(ABC):
     @abstractmethod
     def get_value(self, path: str) -> Any:
         pass
