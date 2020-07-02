@@ -90,7 +90,12 @@ class LocalizedLogger(AbstractLocalizedLogger):
         self.__localization_manager = localization_manager
 
     def info_element_action(
-        self, element_type: str, element_name: str, message_key: str, *args, **kwargs
+        self,
+        element_type: str,
+        element_name: str,
+        message_key: str,
+        *message_args,
+        **logger_kwargs
     ) -> None:
         """
         Log localized message for action with INFO level which is applied for element.
@@ -98,11 +103,11 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param element_type: Type of the element.
         :param element_name: Name of the element.
         :param message_key: Key in resource file.
-        :param args: Arguments, which will be provided to template of localized message.
-        :param kwargs: Arguments for logger.
+        :param message_args: Arguments, which will be provided to template of localized message.
+        :param logger_kwargs: Arguments for logger.
         """
-        message = f"{element_type} '{element_name}' :: {self.__localize_message(message_key, *args)}"
-        logging.info(message, **kwargs)
+        message = f"{element_type} '{element_name}' :: {self.__localize_message(message_key, *message_args)}"
+        logging.info(message, **logger_kwargs)
 
     def info(self, message_key: str, *message_args, **logger_kwargs) -> None:
         """
@@ -112,7 +117,9 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
-        logging.info(self.__localize_message(message_key, *message_args), **logger_kwargs)
+        logging.info(
+            self.__localize_message(message_key, *message_args), **logger_kwargs
+        )
 
     def debug(self, message_key: str, *message_args, **logger_kwargs) -> None:
         """
@@ -122,7 +129,9 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
-        logging.debug(self.__localize_message(message_key, *message_args), **logger_kwargs)
+        logging.debug(
+            self.__localize_message(message_key, *message_args), **logger_kwargs
+        )
 
     def warning(self, message_key: str, *message_args, **logger_kwargs) -> None:
         """
@@ -132,7 +141,9 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
-        logging.warning(self.__localize_message(message_key, *message_args), **logger_kwargs)
+        logging.warning(
+            self.__localize_message(message_key, *message_args), **logger_kwargs
+        )
 
     def error(self, message_key: str, *message_args, **logger_kwargs) -> None:
         """
@@ -142,7 +153,9 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
-        logging.error(self.__localize_message(message_key, *message_args), **logger_kwargs)
+        logging.error(
+            self.__localize_message(message_key, *message_args), **logger_kwargs
+        )
 
     def fatal(self, message_key: str, *message_args, **logger_kwargs) -> None:
         """
@@ -152,7 +165,11 @@ class LocalizedLogger(AbstractLocalizedLogger):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
-        logging.fatal(self.__localize_message(message_key, *message_args), **logger_kwargs)
+        logging.fatal(
+            self.__localize_message(message_key, *message_args), **logger_kwargs
+        )
 
     def __localize_message(self, message_key: str, *message_args) -> str:
-        return self.__localization_manager.get_localized_message(message_key, *message_args)
+        return self.__localization_manager.get_localized_message(
+            message_key, *message_args
+        )
