@@ -1,6 +1,7 @@
 """Module defines abstraction for element state."""
 from abc import ABC
 from abc import abstractmethod
+from datetime import timedelta
 
 
 class AbstractElementStateProvider(ABC):
@@ -51,7 +52,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_displayed(self, timeout: int = 0) -> bool:
+    def wait_for_displayed(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element is displayed on the page.
 
@@ -61,7 +62,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_displayed(self, timeout: int = 0) -> bool:
+    def wait_for_not_displayed(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element is not displayed on the page.
 
@@ -71,7 +72,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_exist(self, timeout: int = 0) -> bool:
+    def wait_for_exist(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element exists in DOM (without visibility check).
 
@@ -81,7 +82,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_exist(self, timeout: int = 0) -> bool:
+    def wait_for_not_exist(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element does not exist in DOM (without visibility check).
 
@@ -91,7 +92,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_enabled(self, timeout: int = 0) -> bool:
+    def wait_for_enabled(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element has enabled state which means element is Enabled and does not have "disabled" class.
 
@@ -102,7 +103,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_enabled(self, timeout: int = 0) -> bool:
+    def wait_for_not_enabled(self, timeout: timedelta = timedelta.min) -> bool:
         """
         Wait for element does not have enabled state which means element is not Enabled or does have "disabled" class.
 
@@ -113,7 +114,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_clickable(self, timeout: int = 0) -> None:
+    def wait_for_clickable(self, timeout: timedelta = timedelta.min) -> None:
         """
         Wait for element to become clickable which means element is displayed and enabled.
 

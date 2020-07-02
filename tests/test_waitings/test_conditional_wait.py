@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from hamcrest import assert_that
 from hamcrest import calling
 from hamcrest import equal_to
@@ -131,17 +133,17 @@ class CustomException(Exception):
 
 class CustomTimeoutConfiguration(AbstractTimeoutConfiguration):
     @property
-    def implicit(self) -> int:
-        return 2
+    def implicit(self) -> timedelta:
+        return timedelta(seconds=2)
 
     @property
-    def condition(self) -> int:
-        return 1
+    def condition(self) -> timedelta:
+        return timedelta(seconds=1)
 
     @property
-    def polling_interval(self) -> int:
-        return 250
+    def polling_interval(self) -> timedelta:
+        return timedelta(milliseconds=250)
 
     @property
-    def command(self) -> int:
-        return 5
+    def command(self) -> timedelta:
+        return timedelta(seconds=5)

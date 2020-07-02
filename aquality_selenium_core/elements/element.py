@@ -1,6 +1,7 @@
 """Abstraction for any custom element of the web, desktop of mobile application."""
 from abc import ABC
 from abc import abstractmethod
+from datetime import timedelta
 from typing import Callable
 from typing import List
 
@@ -115,7 +116,7 @@ class AbstractElement(ABC):
 
         self._do_with_retry(func)
 
-    def get_element(self, timeout: int = 0) -> WebElement:
+    def get_element(self, timeout: timedelta = timedelta.min) -> WebElement:
         """
         Get current element by specified locator.
 
