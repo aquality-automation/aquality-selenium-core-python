@@ -29,7 +29,7 @@ jobs:
           "ubuntu-pypy3",
 
           "macos-py37",
-          "macos-py38"
+          "macos-py38",
         ]
 
         include:
