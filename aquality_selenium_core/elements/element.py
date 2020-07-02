@@ -23,10 +23,10 @@ from aquality_selenium_core.elements.element_state_provider import (
 from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import TElement
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
+from aquality_selenium_core.utilities.action_retrier import TReturn
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
-from aquality_selenium_core.utilities.element_action_retrier import TReturn
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
@@ -173,11 +173,15 @@ class AbstractElement(ABC):
     def _cache(self) -> AbstractElementCacheHandler:
         raise NotImplementedError
 
-    def _log_element_action(self, message_key: str, *args, **kwargs) -> None:
-        raise NotImplementedError
+    def _log_element_action(
+        self, message_key: str, *message_args, **logger_kwargs
+    ) -> None:
+        self._localized_logger.info_element_action(
+            self._element_type, self.name, message_key, message_args, logger_kwargs
+        )
 
     def _do_with_retry(self, expression: Callable[..., TReturn]) -> TReturn:
-        raise NotImplementedError
+        return self._element_action_retrier.do_with_retry(expression)
 
     def find_child_element(
         self,
