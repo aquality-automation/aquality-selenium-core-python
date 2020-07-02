@@ -13,7 +13,12 @@ class AbstractLocalizedLogger(ABC):
 
     @abstractmethod
     def info_element_action(
-        self, element_type: str, element_name: str, message_key: str, *args, **kwargs
+        self,
+        element_type: str,
+        element_name: str,
+        message_key: str,
+        *message_args,
+        **logger_kwargs
     ) -> None:
         """
         Log localized message for action with INFO level which is applied for element.
@@ -21,8 +26,8 @@ class AbstractLocalizedLogger(ABC):
         :param element_type: Type of the element.
         :param element_name: Name of the element.
         :param message_key: Key in resource file.
-        :param args: Arguments, which will be provided to template of localized message.
-        :param kwargs: Arguments for logger.
+        :param message_args: Arguments, which will be provided to template of localized message.
+        :param logger_kwargs: Arguments for logger.
         """
         pass
 
