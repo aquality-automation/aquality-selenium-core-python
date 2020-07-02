@@ -1,13 +1,43 @@
+"""Module defines timeouts configuration."""
+from abc import ABC
+from abc import abstractmethod
 from enum import Enum
 
 import duration
 
 from aquality_selenium_core.configurations.abc_timeout_configuration import AbcTimeoutConfiguration
 from aquality_selenium_core.configurations.duration import Duration
-from aquality_selenium_core.utilities.abc_settings_file import AbcSettingsFile
 
 
-class TimeoutConfiguration(AbcTimeoutConfiguration):
+class AbstractTimeoutConfiguration(ABC):
+    """Abstraction for timeout configuration."""
+
+    @property
+    @abstractmethod
+    def implicit(self) -> int:
+        """Get WedDriver ImplicitWait timeout."""
+        pass
+
+    @property
+    @abstractmethod
+    def condition(self) -> int:
+        """Get default ConditionalWait timeout."""
+        pass
+
+    @property
+    @abstractmethod
+    def polling_interval(self) -> int:
+        """Get ConditionalWait polling interval."""
+        pass
+
+    @property
+    @abstractmethod
+    def command(self) -> int:
+        """Get WebDriver Command timeout."""
+        pass
+
+
+class TimeoutConfiguration(AbstractTimeoutConfiguration):
 
     def __init__(self, settings_file: AbcSettingsFile):
         self.__settings_file = settings_file
