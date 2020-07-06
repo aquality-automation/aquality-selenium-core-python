@@ -154,7 +154,7 @@ class AbstractElement(ABC):
 
     def __log_page_source(self) -> None:
         try:
-            logging.debug(f"Page source: {self._application.driver.page_source}")
+            logging.debug(f"Page source:\n{self._application.driver.page_source}")
         except WebDriverException:
             logging.error("An exception occurred while tried to save the page source")
 
