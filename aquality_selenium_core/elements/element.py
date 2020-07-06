@@ -142,11 +142,12 @@ class AbstractElement(ABC):
         """
         try:
             if self._cache_configuration.is_enabled:
-                return self._cache.get_element(timeout)
+                element = self._cache.get_element(timeout)
             else:
-                return self._element_finder.find_element(
+                element = self._element_finder.find_element(
                     self.__locator, state=self.__element_state, timeout=timeout
                 )
+            return element
         except NoSuchElementException:
             if self._logger_configuration.log_page_source:
                 self.__log_page_source()
