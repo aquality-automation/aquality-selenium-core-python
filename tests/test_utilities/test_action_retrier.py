@@ -6,7 +6,8 @@ from hamcrest import calling
 from hamcrest import equal_to
 from hamcrest import is_not
 from hamcrest import raises
-from selenium.common.exceptions import StaleElementReferenceException, InvalidElementStateException
+from selenium.common.exceptions import InvalidElementStateException
+from selenium.common.exceptions import StaleElementReferenceException
 
 from aquality_selenium_core.configurations.retry_configuration import (
     AbstractRetryConfiguration,
@@ -68,11 +69,13 @@ class TestActionRetries:
 class TestElementActionRetrier:
     handled_exception_test_data = [
         (StaleElementReferenceException, StaleElementReferenceException()),
-        (InvalidElementStateException, InvalidElementStateException())
+        (InvalidElementStateException, InvalidElementStateException()),
     ]
 
     @pytest.mark.parametrize("exception_type,exception", handled_exception_test_data)
-    def test__do_with_retry__should_not_raise_exceptions_handled_by_default(self, exception_type, exception):
+    def test__do_with_retry__should_not_raise_exceptions_handled_by_default(
+        self, exception_type, exception
+    ):
         raise_exception = {"value": True}
 
         def func():
