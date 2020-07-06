@@ -3,6 +3,9 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 
+from aquality_selenium_core.configurations.logger_configuration import (
+    AbstractLoggerConfiguration,
+)
 from aquality_selenium_core.localization.localization_manager import (
     AbstractLocalizationManager,
 )
@@ -29,6 +32,12 @@ class AbstractLocalizedLogger(ABC):
         :param message_args: Arguments, which will be provided to template of localized message.
         :param logger_kwargs: Arguments for logger.
         """
+        pass
+
+    @property
+    @abstractmethod
+    def configuration(self) -> AbstractLoggerConfiguration:
+        """Get logger configuration."""
         pass
 
     @abstractmethod
@@ -90,9 +99,18 @@ class AbstractLocalizedLogger(ABC):
 class LocalizedLogger(AbstractLocalizedLogger):
     """This logger is used to log messages translated into language from configuration."""
 
-    def __init__(self, localization_manager: AbstractLocalizationManager):
+    def __init__(
+        self,
+        localization_manager: AbstractLocalizationManager,
+        configuration: AbstractLoggerConfiguration,
+    ):
         """Initialize with localization manager and logger."""
         self.__localization_manager = localization_manager
+        self.__configuration = configuration
+
+    def configuration(self) -> AbstractLoggerConfiguration:
+        """Get logger configuration."""
+        return self.__configuration
 
     def info_element_action(
         self,
