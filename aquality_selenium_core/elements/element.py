@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import cast
 from typing import List
 
 from selenium.webdriver.common.by import By
@@ -15,6 +16,7 @@ from aquality_selenium_core.configurations.element_cache_configuration import (
 from aquality_selenium_core.elements.element_cache_handler import (
     AbstractElementCacheHandler,
 )
+from aquality_selenium_core.elements.element_cache_handler import ElementCacheHandler
 from aquality_selenium_core.elements.element_factory import AbstractElementFactory
 from aquality_selenium_core.elements.element_finder import AbstractElementFinder
 from aquality_selenium_core.elements.element_state import ElementState
@@ -36,9 +38,10 @@ class AbstractElement(ABC):
 
     def __init__(self, locator: By, name: str, state: ElementState):
         """Initialize element with locator, name and state."""
-        self._locator = locator
-        self._name = name
-        self._state = state
+        self.__locator = locator
+        self.__name = name
+        self.__element_state = state
+        self.__element_cache_handler = cast(AbstractElementCacheHandler, None)
 
     @property
     def locator(self) -> By:
@@ -47,7 +50,7 @@ class AbstractElement(ABC):
 
         :return: Element locator.
         """
-        return self._locator
+        return self.__locator
 
     @property
     def name(self) -> str:
@@ -56,7 +59,11 @@ class AbstractElement(ABC):
 
         :return: Element name.
         """
-        return self._name
+        return self.__name
+
+    @property
+    def _element_state(self):
+        return self.__element_state
 
     @property
     def state(self) -> AbstractElementStateProvider:
@@ -127,10 +134,6 @@ class AbstractElement(ABC):
         raise NotImplementedError
 
     @property
-    def _element_state(self):
-        return self._state
-
-    @property
     @abstractmethod
     def _application(self) -> AbstractApplication:
         pass
@@ -172,7 +175,11 @@ class AbstractElement(ABC):
 
     @property
     def _cache(self) -> AbstractElementCacheHandler:
-        raise NotImplementedError
+        if self.__element_cache_handler is None:
+            self.__element_cache_handler = ElementCacheHandler(
+                self.__locator, self.__element_state, self._element_finder
+            )
+        return self.__element_cache_handler
 
     def _log_element_action(
         self, message_key: str, *message_args, **logger_kwargs
