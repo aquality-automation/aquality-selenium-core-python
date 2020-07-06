@@ -156,7 +156,7 @@ class AbstractElement(ABC):
         try:
             logging.debug(f"Page source: {self._application.driver.page_source}")
         except WebDriverException:
-            logging.error("An exception occured while tried to save the page source")
+            logging.error("An exception occurred while tried to save the page source")
 
     @property
     @abstractmethod
