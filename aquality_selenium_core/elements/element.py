@@ -1,4 +1,5 @@
 """Abstraction for any custom element of the web, desktop of mobile application."""
+import logging
 from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
@@ -6,12 +7,17 @@ from typing import Callable
 from typing import cast
 from typing import List
 
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from aquality_selenium_core.applications.application import AbstractApplication
 from aquality_selenium_core.configurations.element_cache_configuration import (
     AbstractElementCacheConfiguration,
+)
+from aquality_selenium_core.configurations.logger_configuration import (
+    AbstractLoggerConfiguration,
 )
 from aquality_selenium_core.elements.element_cache_handler import (
     AbstractElementCacheHandler,
@@ -25,6 +31,9 @@ from aquality_selenium_core.elements.element_state_provider import (
 )
 from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import TElement
+from aquality_selenium_core.localization.localization_manager import (
+    AbstractLocalizationManager,
+)
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
 from aquality_selenium_core.utilities.action_retrier import TReturn
 from aquality_selenium_core.utilities.element_action_retrier import (
@@ -131,7 +140,23 @@ class AbstractElement(ABC):
         Throws NoSuchElementException if element not found.
         :return: Instance of WebElement if found.
         """
-        raise NotImplementedError
+        try:
+            if self._cache_configuration.is_enabled:
+                return self._cache.get_element(timeout)
+            else:
+                return self._element_finder.find_element(
+                    self.__locator, state=self.__element_state, timeout=timeout
+                )
+        except NoSuchElementException:
+            if self._logger_configuration.log_page_source:
+                self.__log_page_source()
+            raise
+
+    def __log_page_source(self) -> None:
+        try:
+            logging.debug(f"Page source: {self._application.driver.page_source}")
+        except WebDriverException:
+            logging.error("An exception occured while tried to save the page source")
 
     @property
     @abstractmethod
@@ -150,7 +175,7 @@ class AbstractElement(ABC):
 
     @property
     @abstractmethod
-    def _element_cache_configuration(self) -> AbstractElementCacheConfiguration:
+    def _cache_configuration(self) -> AbstractElementCacheConfiguration:
         pass
 
     @property
@@ -165,6 +190,11 @@ class AbstractElement(ABC):
 
     @property
     @abstractmethod
+    def _localization_manager(self) -> AbstractLocalizationManager:
+        pass
+
+    @property
+    @abstractmethod
     def _conditional_wait(self) -> AbstractConditionalWait:
         pass
 
@@ -172,6 +202,10 @@ class AbstractElement(ABC):
     @abstractmethod
     def _element_type(self) -> str:
         pass
+
+    @property
+    def _logger_configuration(self) -> AbstractLoggerConfiguration:
+        return self._localized_logger.configuration
 
     @property
     def _cache(self) -> AbstractElementCacheHandler:
