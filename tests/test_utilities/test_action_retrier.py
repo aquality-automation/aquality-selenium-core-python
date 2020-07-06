@@ -1,13 +1,28 @@
 from datetime import timedelta
 
-from hamcrest import assert_that, calling, raises, equal_to
+import pytest
+from hamcrest import assert_that
+from hamcrest import calling
+from hamcrest import equal_to
+from hamcrest import is_not
+from hamcrest import raises
+from selenium.common.exceptions import StaleElementReferenceException, InvalidElementStateException
 
-from aquality_selenium_core.configurations.retry_configuration import AbstractRetryConfiguration
-from aquality_selenium_core.utilities.action_retrier import AbstractActionRetrier, ActionRetrier
+from aquality_selenium_core.configurations.retry_configuration import (
+    AbstractRetryConfiguration,
+)
+from aquality_selenium_core.utilities.action_retrier import AbstractActionRetrier
+from aquality_selenium_core.utilities.action_retrier import ActionRetrier
+from aquality_selenium_core.utilities.element_action_retrier import (
+    AbstractElementActionRetrier,
+)
+from aquality_selenium_core.utilities.element_action_retrier import ElementActionRetrier
 
 
 class TestActionRetries:
-    def test__do_with_retry__should_raise_error_if_there_are_no_handled_exceptions(self):
+    def test__do_with_retry__should_raise_error_if_there_are_no_handled_exceptions(
+        self,
+    ):
         def func():
             raise CustomException()
 
@@ -27,7 +42,9 @@ class TestActionRetries:
             return True
 
         assert_that(
-            self.__get_action_retrier().do_with_retry(func, handled_exceptions=[CustomException]),
+            self.__get_action_retrier().do_with_retry(
+                func, handled_exceptions=[CustomException]
+            ),
             equal_to(True),
             "Exception is raised",
         )
@@ -44,8 +61,36 @@ class TestActionRetries:
 
     @staticmethod
     def __get_action_retrier() -> AbstractActionRetrier:
-        timeout_configuration = CustomRetryConfiguration()
-        return ActionRetrier(timeout_configuration)
+        retry_configuration = CustomRetryConfiguration()
+        return ActionRetrier(retry_configuration)
+
+
+class TestElementActionRetrier:
+    handled_exception_test_data = [
+        (StaleElementReferenceException, StaleElementReferenceException()),
+        (InvalidElementStateException, InvalidElementStateException())
+    ]
+
+    @pytest.mark.parametrize("exception_type,exception", handled_exception_test_data)
+    def test__do_with_retry__should_not_raise_exceptions_handled_by_default(self, exception_type, exception):
+        raise_exception = {"value": True}
+
+        def func():
+            if raise_exception["value"]:
+                raise_exception["value"] = False
+                raise exception
+            return True
+
+        assert_that(
+            calling(self.__get_element_action_retrier().do_with_retry).with_args(func),
+            is_not(raises(exception_type)),
+            "Default exception is not ignored",
+        )
+
+    @staticmethod
+    def __get_element_action_retrier() -> AbstractElementActionRetrier:
+        retry_configuration = CustomRetryConfiguration()
+        return ElementActionRetrier(retry_configuration)
 
 
 class CustomException(Exception):
