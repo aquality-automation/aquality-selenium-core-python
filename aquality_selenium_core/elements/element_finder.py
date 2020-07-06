@@ -7,6 +7,8 @@ from typing import List
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
+from aquality_selenium_core.elements.element_state import ElementState
+
 
 class AbstractElementFinder(ABC):
     """
@@ -23,6 +25,7 @@ class AbstractElementFinder(ABC):
         self,
         locator: By,
         element_state_condition: Callable[[WebElement], bool] = lambda element: True,
+        state: ElementState = ElementState.DEFAULT,
         timeout: timedelta = timedelta.min,
     ) -> WebElement:
         """
@@ -30,6 +33,7 @@ class AbstractElementFinder(ABC):
 
         :param locator: element locator.
         :param element_state_condition: predicate to define element state.
+        :param state: desired ElementState.
         :param timeout: timeout for search.
         :return: Found element.
         :raises: NoSuchElementException if element was not found in time in desired state.
@@ -40,6 +44,7 @@ class AbstractElementFinder(ABC):
         self,
         locator: By,
         element_state_condition: Callable[[WebElement], bool] = lambda element: True,
+        state: ElementState = ElementState.DEFAULT,
         timeout: timedelta = timedelta.min,
     ) -> List[WebElement]:
         """
@@ -47,6 +52,7 @@ class AbstractElementFinder(ABC):
 
         :param locator: element locator.
         :param element_state_condition: predicate to define element state.
+        :param state: desired ElementState.
         :param timeout: timeout for search.
         :return: List of found elements.
         """
