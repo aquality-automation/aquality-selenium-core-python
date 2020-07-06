@@ -1,5 +1,6 @@
 """Module defines abstraction for element finder."""
 from abc import ABC
+from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
 from typing import List
@@ -21,6 +22,7 @@ class AbstractElementFinder(ABC):
     - with - Predicate.
     """
 
+    @abstractmethod
     def find_element(
         self,
         locator: By,
@@ -40,6 +42,7 @@ class AbstractElementFinder(ABC):
         """
         pass
 
+    @abstractmethod
     def find_elements(
         self,
         locator: By,
