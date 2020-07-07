@@ -3,7 +3,6 @@ from typing import Generator
 
 import pytest
 
-from aquality_selenium_core.utilities.resource_instance_mock import ResourceInstanceMock
 from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.utilities_module import AbstractUtilitiesModule
 from tests.test_utilities.test_settings_file.keys import TestKeys
@@ -17,7 +16,7 @@ def get_profile() -> Generator[AbstractSettingsFile, None, None]:
 
 @pytest.fixture(scope="function")
 def get_default_profile() -> Generator[AbstractSettingsFile, None, None]:
-    yield ResourceInstanceMock.get_resource_instance()
+    yield AbstractUtilitiesModule().get_instance_of_settings_file()
 
 
 @pytest.fixture(scope="function", autouse=True)

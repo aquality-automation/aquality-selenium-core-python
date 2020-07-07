@@ -1,6 +1,5 @@
 import os
 from distutils.util import strtobool
-from typing import List
 
 import pytest
 from hamcrest import assert_that
@@ -17,8 +16,8 @@ class TestSettingsFiles:
     def test_should_be_possible_to_override_boolean_value_via_environment_variable(
         self, get_profile
     ):
-        old_value: bool = get_profile.get_value(TestKeys.BOOLEANVALUE_ENV_KEY)
-        target_value: bool = not old_value
+        old_value = get_profile.get_value(TestKeys.BOOLEANVALUE_ENV_KEY)
+        target_value = not old_value
         os.environ[TestKeys.BOOLEANVALUE_ENV_KEY] = str(target_value)
         assert_that(
             bool(strtobool(get_profile.get_value(TestKeys.BOOLEANVALUE_ENV_KEY))),
@@ -34,7 +33,7 @@ class TestSettingsFiles:
             equal_to(False),
             "value should be absent by default",
         )
-        target_value: str = str(True)
+        target_value = str(True)
         os.environ[TestKeys.ABSENTVALUE_PATH] = target_value
         assert_that(
             get_profile.is_value_present(TestKeys.ABSENTVALUE_PATH),
@@ -48,7 +47,7 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_get_default_content(self, get_default_profile):
-        language: str = get_default_profile.get_value("logger.language")
+        language = get_default_profile.get_value("logger.language")
         assert_that(
             language,
             equal_to("en"),
@@ -59,14 +58,14 @@ class TestSettingsFiles:
         language_path = "logger.language"
         language_key = "language"
 
-        language: str = get_profile.get_value(language_path)
+        language = get_profile.get_value(language_path)
         assert_that(
             language,
             equal_to(TestKeys.EXPECTED_LANGUAGES[language_key]),
             f"Logger language in settings file {TestKeys.FILE_NAME} should be read correctly",
         )
 
-        new_lang: str = "newLang"
+        new_lang = "newLang"
         os.environ[TestKeys.LANGUAGE_ENV_KEY] = new_lang
 
         language = get_profile.get_value(language_path)
@@ -78,9 +77,9 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_get_list_of_values(self, get_profile):
-        arguments_path: str = "arguments.start"
-        expected_arguments: List[str] = ["first", "second"]
-        arguments: List[str] = get_profile.get_list(arguments_path)
+        arguments_path = "arguments.start"
+        expected_arguments = ["first", "second"]
+        arguments = get_profile.get_list(arguments_path)
 
         assert_that(arguments, not_none(), "Arguments list is none")
         assert_that(
@@ -90,7 +89,7 @@ class TestSettingsFiles:
         )
 
         expected_arguments = ["firstNew", "secondNew"]
-        new_args: str = "firstNew,secondNew"
+        new_args = "firstNew,secondNew"
         os.environ[TestKeys.ARGUMENTS_ENV_KEY] = new_args
         arguments = get_profile.get_list(arguments_path)
         assert_that(arguments, not_none(), "Arguments list is none")
@@ -101,7 +100,7 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_get_map(self, get_profile):
-        logger_path: str = "logger"
+        logger_path = "logger"
 
         languages = get_profile.get_dictionary(logger_path)
 
@@ -128,7 +127,7 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_check_is_value_present(self, get_profile):
-        is_time_out_present: bool = get_profile.is_value_present(
+        is_time_out_present = get_profile.is_value_present(
             TestKeys.TIMEOUT_POLLING_INTERVAL_PATH
         )
 
@@ -137,8 +136,8 @@ class TestSettingsFiles:
             f"{TestKeys.TIMEOUT_POLLING_INTERVAL_PATH} value should be present in settings file {TestKeys.FILE_NAME}",
         )
 
-        wrong_path: str = "blabla"
-        is_wrong_path_present: bool = get_profile.is_value_present(wrong_path)
+        wrong_path = "blabla"
+        is_wrong_path_present = get_profile.is_value_present(wrong_path)
         assert_that(
             is_wrong_path_present,
             equal_to(False),
@@ -153,15 +152,16 @@ class TestSettingsFiles:
             f"{TestKeys.NULLVALUE_PATH} value should be present in settings file {TestKeys.FILE_NAME}",
         )
 
-    methods_to_check = [
-        AbstractSettingsFile.get_list,
-        AbstractSettingsFile.get_dictionary,
-        AbstractSettingsFile.get_value,
-    ]
-
-    @pytest.mark.parametrize("func", methods_to_check)
+    @pytest.mark.parametrize(
+        "func",
+        [
+            AbstractSettingsFile.get_list,
+            AbstractSettingsFile.get_dictionary,
+            AbstractSettingsFile.get_value,
+        ],
+    )
     def test_should_throw_exception_when_value_not_found(self, func, get_profile):
-        wrong_path: str = "blabla"
+        wrong_path = "blabla"
         assert_that(
             calling(getattr(get_profile, func.__name__)).with_args(wrong_path),
             raises(ValueError),
