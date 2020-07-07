@@ -6,6 +6,7 @@ from datetime import timedelta
 from typing import Callable
 from typing import cast
 from typing import List
+from typing import Tuple
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import WebDriverException
@@ -46,7 +47,7 @@ from aquality_selenium_core.waitings.conditional_wait import AbstractConditional
 class AbstractElement(ABC):
     """Base class for any custom element."""
 
-    def __init__(self, locator: By, name: str, state: Callable):
+    def __init__(self, locator: Tuple[By, str], name: str, state: Callable):
         """Initialize element with locator, name and state."""
         self.__locator = locator
         self.__name = name
@@ -54,7 +55,7 @@ class AbstractElement(ABC):
         self.__element_cache_handler = cast(AbstractElementCacheHandler, None)
 
     @property
-    def locator(self) -> By:
+    def locator(self) -> Tuple[By, str]:
         """
         Get unique locator of element.
 
@@ -231,9 +232,9 @@ class AbstractElement(ABC):
 
     def find_child_element(
         self,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         state: Callable = Displayed(),
     ) -> TElement:
         """
@@ -251,9 +252,9 @@ class AbstractElement(ABC):
 
     def find_child_elements(
         self,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable = Displayed(),
     ) -> List[TElement]:

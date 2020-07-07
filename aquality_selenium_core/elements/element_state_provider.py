@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -143,7 +144,7 @@ class ElementStateProvider(AbstractElementStateProvider):
 
     def __init__(
         self,
-        element_locator: By,
+        element_locator: Tuple[By, str],
         conditional_wait: AbstractConditionalWait,
         element_finder: AbstractElementFinder,
     ):
@@ -261,7 +262,7 @@ class ElementStateProvider(AbstractElementStateProvider):
         found_elements = self.__element_finder.find_elements(
             self.__element_locator, state, timeout
         )
-        return len(found_elements) > 0
+        return any(found_elements)
 
     def __is_element_clickable(
         self, timeout: timedelta, catch_timeout_exception: bool
@@ -288,4 +289,4 @@ class ElementStateProvider(AbstractElementStateProvider):
         found_elements = self.__element_finder.find_elements_in_state(
             self.__element_locator, desired_state, timeout
         )
-        return len(found_elements) > 0
+        return any(found_elements)

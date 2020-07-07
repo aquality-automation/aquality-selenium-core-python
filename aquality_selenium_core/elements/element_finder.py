@@ -4,6 +4,7 @@ from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
 from typing import List
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -18,7 +19,7 @@ class AbstractElementFinder(ABC):
     @abstractmethod
     def find_element(
         self,
-        locator: By,
+        locator: Tuple[By, str],
         desired_state: Callable[[WebElement], bool] = ExistsInAnyState(),
         timeout: timedelta = timedelta.min,
     ) -> WebElement:
@@ -36,7 +37,7 @@ class AbstractElementFinder(ABC):
     @abstractmethod
     def find_elements(
         self,
-        locator: By,
+        locator: Tuple[By, str],
         desired_state: Callable[[WebElement], bool] = ExistsInAnyState(),
         timeout: timedelta = timedelta.min,
     ) -> List[WebElement]:
@@ -53,7 +54,7 @@ class AbstractElementFinder(ABC):
     @abstractmethod
     def find_elements_in_state(
         self,
-        locator: By,
+        locator: Tuple[By, str],
         desired_state: DesiredState,
         timeout: timedelta = timedelta.min,
     ):

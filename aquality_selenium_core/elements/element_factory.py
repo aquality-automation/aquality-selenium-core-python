@@ -3,8 +3,10 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Callable
 from typing import List
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 
 from aquality_selenium_core.elements.element import AbstractElement
 from aquality_selenium_core.elements.element_state import Displayed
@@ -18,10 +20,10 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def get_custom_element(
         self,
-        supplier: Callable[[By, str, Callable], TElement],
-        locator: By,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        locator: Tuple[By, str],
         name: str,
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
         Create custom element according to passed parameters.
@@ -38,10 +40,10 @@ class AbstractElementFactory(ABC):
     def find_child_element(
         self,
         parent_element: AbstractElement,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
-        state: Callable = Displayed(),
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
         Find child element by its locator relative to parent element.
@@ -59,11 +61,11 @@ class AbstractElementFactory(ABC):
     def find_child_elements(
         self,
         parent_element: AbstractElement,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> List[TElement]:
         """
         Find child element by its locator relative to parent element.
@@ -81,11 +83,11 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def find_elements(
         self,
-        locator: By,
+        locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
         Find list of elements by base locator.

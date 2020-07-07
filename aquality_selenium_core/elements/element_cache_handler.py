@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -43,7 +44,9 @@ class AbstractElementCacheHandler(ABC):
 class ElementCacheHandler(AbstractElementCacheHandler):
     """Allows to use cached element."""
 
-    def __init__(self, locator: By, state: Callable, finder: AbstractElementFinder):
+    def __init__(
+        self, locator: Tuple[By, str], state: Callable, finder: AbstractElementFinder
+    ):
         """Initialize handler with default state and finder."""
         self.__locator = locator
         self.__state = state
