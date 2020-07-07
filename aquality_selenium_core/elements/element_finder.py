@@ -8,7 +8,7 @@ from typing import List
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state import ExistsInAnyState
 
 
 class AbstractElementFinder(ABC):
@@ -26,16 +26,14 @@ class AbstractElementFinder(ABC):
     def find_element(
         self,
         locator: By,
-        element_state_condition: Callable[[WebElement], bool] = lambda element: True,
-        state: ElementState = ElementState.DEFAULT,
+        desired_state: Callable = ExistsInAnyState(),
         timeout: timedelta = timedelta.min,
     ) -> WebElement:
         """
         Find element in desired ElementState or state defined by predicate.
 
         :param locator: element locator.
-        :param element_state_condition: predicate to define element state.
-        :param state: desired ElementState.
+        :param desired_state: desired element state as callable object.
         :param timeout: timeout for search.
         :return: Found element.
         :raises: NoSuchElementException if element was not found in time in desired state.
@@ -46,16 +44,14 @@ class AbstractElementFinder(ABC):
     def find_elements(
         self,
         locator: By,
-        element_state_condition: Callable[[WebElement], bool] = lambda element: True,
-        state: ElementState = ElementState.DEFAULT,
+        desired_state: Callable = ExistsInAnyState(),
         timeout: timedelta = timedelta.min,
     ) -> List[WebElement]:
         """
         Find elements in desired ElementState or state defined by predicate.
 
         :param locator: element locator.
-        :param element_state_condition: predicate to define element state.
-        :param state: desired ElementState.
+        :param desired_state: desired element state as callable object.
         :param timeout: timeout for search.
         :return: List of found elements.
         """

@@ -2,10 +2,11 @@
 from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
+from typing import Callable
 
 from selenium.webdriver.remote.webelement import WebElement
 
-from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state import ExistsInAnyState
 
 
 class AbstractElementCacheHandler(ABC):
@@ -18,9 +19,7 @@ class AbstractElementCacheHandler(ABC):
         pass
 
     @abstractmethod
-    def is_refresh_needed(
-        self, custom_state: ElementState = ElementState.EXISTS_IN_ANY_STATE
-    ) -> bool:
+    def is_refresh_needed(self, custom_state: Callable = ExistsInAnyState()) -> bool:
         """
         Determine is the cached element refresh needed.
 
@@ -33,7 +32,7 @@ class AbstractElementCacheHandler(ABC):
     def get_element(
         self,
         timeout: timedelta = timedelta.min,
-        custom_state: ElementState = ElementState.EXISTS_IN_ANY_STATE,
+        custom_state: Callable = ExistsInAnyState(),
     ) -> WebElement:
         """
         Allow to get cached element.
