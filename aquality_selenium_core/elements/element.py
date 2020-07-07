@@ -30,6 +30,9 @@ from aquality_selenium_core.elements.element_state import Displayed
 from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
+from aquality_selenium_core.elements.element_state_provider import (
+    CachedElementStateProvider,
+)
 from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
 from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import TElement
@@ -84,9 +87,14 @@ class AbstractElement(ABC):
         Provider allows to define element's state (whether it is displayed, exists or not).
         :return: Provider to define element's state.
         """
-        return ElementStateProvider(
-            self.locator, self._conditional_wait, self._element_finder
-        )
+        if self._cache_configuration.is_enabled:
+            return CachedElementStateProvider(
+                self.locator, self._conditional_wait, self._cache
+            )
+        else:
+            return ElementStateProvider(
+                self.locator, self._conditional_wait, self._element_finder
+            )
 
     @property
     def text(self) -> str:
