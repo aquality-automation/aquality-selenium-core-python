@@ -145,12 +145,8 @@ class TestSettingsFiles:
             f"{wrong_path} value should not be present in settings file {TestKeys.FILE_NAME}",
         )
 
-    def test_should_be_possible_to_check_that_null_value_is_present(
-        self, get_profile
-    ):
-        is_null_value_present = get_profile.is_value_present(
-            TestKeys.NULLVALUE_PATH
-        )
+    def test_should_be_possible_to_check_that_null_value_is_present(self, get_profile):
+        is_null_value_present = get_profile.is_value_present(TestKeys.NULLVALUE_PATH)
         assert_that(
             is_null_value_present,
             equal_to(True),
