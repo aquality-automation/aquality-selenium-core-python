@@ -5,7 +5,7 @@ import pytest
 
 from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.utilities_module import AbstractUtilitiesModule
-from tests.test_utilities.test_settings_file.keys import TestKeys
+from tests.test_utilities.test_settings_file.values import TestValues
 
 
 @pytest.fixture(scope="function")
@@ -22,9 +22,9 @@ def get_default_profile() -> Generator[AbstractSettingsFile, None, None]:
 @pytest.fixture(scope="function", autouse=True)
 def clean_system_variables() -> None:
     __remove_from_environ_if_exist("profile")
-    __remove_from_environ_if_exist(TestKeys.LANGUAGE_ENV_KEY)
-    __remove_from_environ_if_exist(TestKeys.TIMEOUT_POLLING_INTERVAL_KEY)
-    __remove_from_environ_if_exist(TestKeys.ARGUMENTS_ENV_KEY)
+    __remove_from_environ_if_exist(TestValues.LANGUAGE_ENV_KEY)
+    __remove_from_environ_if_exist(TestValues.TIMEOUT_POLLING_INTERVAL_KEY)
+    __remove_from_environ_if_exist(TestValues.ARGUMENTS_ENV_KEY)
 
 
 def __remove_from_environ_if_exist(key) -> None:
