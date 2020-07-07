@@ -1,6 +1,7 @@
 """Module defines timeouts configuration."""
 from abc import ABC
 from abc import abstractmethod
+from datetime import timedelta
 
 
 class AbstractTimeoutConfiguration(ABC):
@@ -8,24 +9,24 @@ class AbstractTimeoutConfiguration(ABC):
 
     @property
     @abstractmethod
-    def implicit(self) -> int:
+    def implicit(self) -> timedelta:
         """Get WedDriver ImplicitWait timeout."""
         pass
 
     @property
     @abstractmethod
-    def condition(self) -> int:
+    def condition(self) -> timedelta:
         """Get default ConditionalWait timeout."""
         pass
 
     @property
     @abstractmethod
-    def polling_interval(self) -> int:
+    def polling_interval(self) -> timedelta:
         """Get ConditionalWait polling interval."""
         pass
 
     @property
     @abstractmethod
-    def command(self) -> int:
+    def command(self) -> timedelta:
         """Get WebDriver Command timeout."""
         pass

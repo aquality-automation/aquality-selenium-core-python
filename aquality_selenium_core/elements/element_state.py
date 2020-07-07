@@ -1,9 +1,18 @@
 """Module defines enumeration for element states."""
-from enum import Enum
+from selenium.webdriver.remote.webelement import WebElement
 
 
-class ElementState(Enum):
-    """Enumeration with possible element states."""
+class ExistsInAnyState:
+    """Determines any element's state."""
 
-    DISPLAYED = "displayed"
-    EXISTS_IN_ANY_STATE = "exists"
+    def __call__(self, element: WebElement):
+        """Return True in any case."""
+        return True
+
+
+class Displayed:
+    """Determines element's displayed state."""
+
+    def __call__(self, element: WebElement):
+        """Return true if elements is displayed and false otherwise."""
+        return element.is_displayed()
