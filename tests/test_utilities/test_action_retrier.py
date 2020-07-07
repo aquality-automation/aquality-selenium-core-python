@@ -69,7 +69,7 @@ class TestActionRetries:
 class TestElementActionRetrier:
     @pytest.mark.parametrize(
         "exception_type,exception",
-        handled_exception_test_data=[
+        [
             (StaleElementReferenceException, StaleElementReferenceException()),
             (InvalidElementStateException, InvalidElementStateException()),
         ],
