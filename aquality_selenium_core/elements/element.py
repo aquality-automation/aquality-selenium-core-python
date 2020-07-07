@@ -23,10 +23,10 @@ from aquality_selenium_core.elements.element_state_provider import (
 from aquality_selenium_core.elements.elements_count import ElementsCount
 from aquality_selenium_core.elements.parent import TElement
 from aquality_selenium_core.localization.localized_logger import AbstractLocalizedLogger
+from aquality_selenium_core.utilities.action_retrier import TReturn
 from aquality_selenium_core.utilities.element_action_retrier import (
     AbstractElementActionRetrier,
 )
-from aquality_selenium_core.utilities.element_action_retrier import TReturn
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 

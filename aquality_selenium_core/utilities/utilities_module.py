@@ -6,7 +6,9 @@ from typing import Callable
 import rootpath
 
 from aquality_selenium_core.utilities.action_retrier import AbstractActionRetrier
-from aquality_selenium_core.utilities.action_retrier import AbstractElementActionRetrier
+from aquality_selenium_core.utilities.element_action_retrier import (
+    AbstractElementActionRetrier,
+)
 from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.settings_file import JsonSettingsFile
 

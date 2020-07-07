@@ -6,11 +6,11 @@ import pytest
 from aquality_selenium_core.utilities.resource_instance_mock import ResourceInstanceMock
 from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 from aquality_selenium_core.utilities.utilities_module import AbstractUtilitiesModule
-from tests.utilities_tests.settings_file_tests.test_keys import TestKeys
+from tests.test_utilities.test_settings_file.keys import TestKeys
 
 
 @pytest.fixture(scope="function")
-def get_test_profile() -> Generator[AbstractSettingsFile, None, None]:
+def get_profile() -> Generator[AbstractSettingsFile, None, None]:
     os.environ["profile"] = "jsontest"
     yield AbstractUtilitiesModule().get_instance_of_settings_file()
 

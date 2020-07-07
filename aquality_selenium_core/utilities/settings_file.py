@@ -11,9 +11,6 @@ from typing import Optional
 
 from jsonpath_ng import parse
 
-from aquality_selenium_core.exceptions.illegal_argument_exception import (
-    IllegalArgumentException,
-)
 from aquality_selenium_core.utilities.resource_file import ResourceFile
 
 
@@ -93,9 +90,9 @@ class JsonSettingsFile(AbstractSettingsFile):
         """
         Get list of values by specified path from environment variables or settings file.
 
-        Throws IllegalArgumentException if nothing was found
         :param path: Path to value.
         :return: List of values by specified path.
+        :raises: ValueError if nothing is found.
         """
         env_var = self.__get_env_value(path)
         data = (
@@ -109,9 +106,9 @@ class JsonSettingsFile(AbstractSettingsFile):
         """
         Get dictionary of values by specified path from settings file.
 
-        Throws IllegalArgumentException if nothing was found
         :param path: Path to value.
         :return: Dictionary of values by specified path.
+        :raises: ValueError if nothing is found.
         """
         node = self.__get_json_node(path, throw_if_empty=True)
         return {key: self.get_value(f"{path}.{key}") for key in node[0].value}
@@ -142,7 +139,7 @@ class JsonSettingsFile(AbstractSettingsFile):
     def __get_json_node(self, json_path: str, throw_if_empty: bool) -> Any:
         node = parse(f"$.{json_path}").find(self.__content)
         if not node and throw_if_empty:
-            raise IllegalArgumentException(
+            raise ValueError(
                 f"Json field by json-path {json_path} was not found in the file {self.__content}"
             )
         return node
