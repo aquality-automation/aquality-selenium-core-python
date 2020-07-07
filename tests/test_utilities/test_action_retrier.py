@@ -67,12 +67,13 @@ class TestActionRetries:
 
 
 class TestElementActionRetrier:
-    handled_exception_test_data = [
-        (StaleElementReferenceException, StaleElementReferenceException()),
-        (InvalidElementStateException, InvalidElementStateException()),
-    ]
-
-    @pytest.mark.parametrize("exception_type,exception", handled_exception_test_data)
+    @pytest.mark.parametrize(
+        "exception_type,exception",
+        handled_exception_test_data=[
+            (StaleElementReferenceException, StaleElementReferenceException()),
+            (InvalidElementStateException, InvalidElementStateException()),
+        ],
+    )
     def test__do_with_retry__should_not_raise_exceptions_handled_by_default(
         self, exception_type, exception
     ):
