@@ -16,11 +16,12 @@ class TestSettingsFiles:
     def test_should_be_possible_to_override_boolean_value_via_environment_variable(
         self, get_profile
     ):
-        old_value = get_profile.get_value(TestKeys.BOOLEANVALUE_ENV_KEY)
+        key = "booleanValue"
+        old_value = get_profile.get_value(key)
         target_value = not old_value
-        os.environ[TestKeys.BOOLEANVALUE_ENV_KEY] = str(target_value)
+        os.environ[key] = str(target_value)
         assert_that(
-            bool(strtobool(get_profile.get_value(TestKeys.BOOLEANVALUE_ENV_KEY))),
+            bool(strtobool(get_profile.get_value(key))),
             equal_to(target_value),
             "value passed via env var is not used by SettingsFile",
         )
@@ -66,7 +67,7 @@ class TestSettingsFiles:
         )
 
         new_lang = "newLang"
-        os.environ[TestKeys.LANGUAGE_ENV_KEY] = new_lang
+        os.environ[language_path] = new_lang
 
         language = get_profile.get_value(language_path)
         assert_that(
@@ -127,13 +128,12 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_check_is_value_present(self, get_profile):
-        is_time_out_present = get_profile.is_value_present(
-            TestKeys.TIMEOUT_POLLING_INTERVAL_PATH
-        )
+        key = "timeouts.timeoutPollingInterval"
+        is_time_out_present = get_profile.is_value_present(key)
 
         assert_that(
             is_time_out_present,
-            f"{TestKeys.TIMEOUT_POLLING_INTERVAL_PATH} value should be present in settings file {TestKeys.FILE_NAME}",
+            f"{key} value should be present in settings file {TestKeys.FILE_NAME}",
         )
 
         wrong_path = "blabla"
@@ -145,11 +145,12 @@ class TestSettingsFiles:
         )
 
     def test_should_be_possible_to_check_that_null_value_is_present(self, get_profile):
-        is_null_value_present = get_profile.is_value_present(TestKeys.NULLVALUE_PATH)
+        key = "nullValue"
+        is_null_value_present = get_profile.is_value_present(key)
         assert_that(
             is_null_value_present,
             equal_to(True),
-            f"{TestKeys.NULLVALUE_PATH} value should be present in settings file {TestKeys.FILE_NAME}",
+            f"{key} value should be present in settings file {key}",
         )
 
     @pytest.mark.parametrize(
