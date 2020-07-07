@@ -1,11 +1,21 @@
 """Module defines abstraction for retry functionality."""
 from abc import ABC
-from typing import TypeVar
+from abc import abstractmethod
+from typing import List
+from typing import Type
 
-TReturn = TypeVar("TReturn")
+from aquality_selenium_core.utilities.action_retrier import AbstractActionRetrier
 
 
-class AbstractElementActionRetrier(ABC):
-    """Retries an action or function when defined exception occurs."""
+class AbstractElementActionRetrier(AbstractActionRetrier, ABC):
+    """Abstract class for action retrier with elements."""
 
-    pass
+    @property
+    @abstractmethod
+    def get_handled_exceptions(self) -> List[Type[Exception]]:
+        """
+        Return supported exceptions.
+
+        :return: Supported exceptions.
+        """
+        pass

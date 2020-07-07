@@ -2,6 +2,7 @@
 import time
 from abc import ABC
 from abc import abstractmethod
+from datetime import timedelta
 from typing import Callable
 from typing import List
 from typing import Type
@@ -18,8 +19,8 @@ class AbstractConditionalWait(ABC):
     def wait_for(
         self,
         condition: Callable[..., bool],
-        timeout: int = 0,
-        polling_interval: int = 0,
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
@@ -38,8 +39,8 @@ class AbstractConditionalWait(ABC):
     def wait_for_true(
         self,
         condition: Callable[..., bool],
-        timeout: int = 0,
-        polling_interval: int = 0,
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> None:
@@ -67,8 +68,8 @@ class ConditionalWait(AbstractConditionalWait):
     def wait_for(
         self,
         condition: Callable[..., bool],
-        timeout: int = 0,
-        polling_interval: int = 0,
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
@@ -95,8 +96,8 @@ class ConditionalWait(AbstractConditionalWait):
     def wait_for_true(
         self,
         condition: Callable[..., bool],
-        timeout: int = 0,
-        polling_interval: int = 0,
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> None:
@@ -118,12 +119,12 @@ class ConditionalWait(AbstractConditionalWait):
                 return
 
             current_time = time.time()
-            if (current_time - start_time) > timeout:
+            if (current_time - start_time) > wait_timeout:
                 raise TimeoutError(
                     f"Timed out after {wait_timeout} seconds during wait for condition '{message}'"
                 )
 
-            time.sleep(check_interval / 1000)
+            time.sleep(check_interval)
 
     @staticmethod
     def __is_condition_satisfied(
@@ -139,12 +140,18 @@ class ConditionalWait(AbstractConditionalWait):
                 return False
             raise
 
-    def __resolve_condition_timeout(self, timeout: int) -> int:
-        return timeout if timeout != 0 else self.__timeout_configuration.condition
+    def __resolve_condition_timeout(self, timeout: timedelta) -> int:
+        timeout = (
+            timeout
+            if timeout != timedelta.min
+            else self.__timeout_configuration.condition
+        )
+        return timeout.seconds
 
-    def __resolve_polling_interval(self, polling_interval: int) -> int:
-        return (
+    def __resolve_polling_interval(self, polling_interval: timedelta) -> int:
+        interval = (
             polling_interval
-            if polling_interval != 0
+            if polling_interval != timedelta.min
             else self.__timeout_configuration.polling_interval
         )
+        return interval.seconds
