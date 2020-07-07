@@ -22,6 +22,7 @@ from aquality_selenium_core.configurations.logger_configuration import (
 from aquality_selenium_core.elements.element_cache_handler import (
     AbstractElementCacheHandler,
 )
+from aquality_selenium_core.elements.element_cache_handler import ElementCacheHandler
 from aquality_selenium_core.elements.element_factory import AbstractElementFactory
 from aquality_selenium_core.elements.element_finder import AbstractElementFinder
 from aquality_selenium_core.elements.element_state import Displayed
@@ -209,7 +210,11 @@ class AbstractElement(ABC):
 
     @property
     def _cache(self) -> AbstractElementCacheHandler:
-        raise NotImplementedError
+        if self.__element_cache_handler is None:
+            self.__element_cache_handler = ElementCacheHandler(
+                self.__locator, self.__element_state, self._element_finder
+            )
+        return self.__element_cache_handler
 
     def _log_element_action(
         self, message_key: str, *message_args, **logger_kwargs
