@@ -25,7 +25,7 @@ from aquality_selenium_core.elements.element_cache_handler import (
 from aquality_selenium_core.elements.element_cache_handler import ElementCacheHandler
 from aquality_selenium_core.elements.element_factory import AbstractElementFactory
 from aquality_selenium_core.elements.element_finder import AbstractElementFinder
-from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state import Displayed
 from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
@@ -45,7 +45,7 @@ from aquality_selenium_core.waitings.conditional_wait import AbstractConditional
 class AbstractElement(ABC):
     """Base class for any custom element."""
 
-    def __init__(self, locator: By, name: str, state: ElementState):
+    def __init__(self, locator: By, name: str, state: Callable):
         """Initialize element with locator, name and state."""
         self.__locator = locator
         self.__name = name
@@ -137,15 +137,15 @@ class AbstractElement(ABC):
         Get current element by specified locator.
 
         Default timeout is provided in TimeoutConfiguration.
-        Throws NoSuchElementException if element not found.
         :return: Instance of WebElement if found.
+        :raises: NoSuchElementException if element not found.
         """
         try:
             if self._cache_configuration.is_enabled:
                 element = self._cache.get_element(timeout)
             else:
                 element = self._element_finder.find_element(
-                    self.__locator, state=self.__element_state, timeout=timeout
+                    self.__locator, self.__element_state, timeout
                 )
             return element
         except NoSuchElementException:
@@ -230,8 +230,8 @@ class AbstractElement(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], TElement],
-        state: ElementState = ElementState.DISPLAYED,
+        supplier: Callable[[By, str, Callable], TElement],
+        state: Callable = Displayed(),
     ) -> TElement:
         """
         Find the child element of type TElement of current element by its locator.
@@ -250,9 +250,9 @@ class AbstractElement(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], TElement],
+        supplier: Callable[[By, str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: ElementState = ElementState.DISPLAYED,
+        state: Callable = Displayed(),
     ) -> List[TElement]:
         """
         Find child elements of current element by its locator.

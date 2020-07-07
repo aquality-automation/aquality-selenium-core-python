@@ -7,7 +7,7 @@ from typing import TypeVar
 
 from selenium.webdriver.common.by import By
 
-from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state import Displayed
 from aquality_selenium_core.elements.elements_count import ElementsCount
 
 TElement = TypeVar("TElement")
@@ -21,8 +21,8 @@ class AbstractParent(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], TElement],
-        state: ElementState = ElementState.DISPLAYED,
+        supplier: Callable[[By, str, Callable], TElement],
+        state: Callable = Displayed(),
     ) -> TElement:
         """
         Find child element ot type TElement of current element by its locator.
@@ -40,9 +40,9 @@ class AbstractParent(ABC):
         self,
         child_locator: By,
         name: str,
-        supplier: Callable[[By, str, ElementState], TElement],
+        supplier: Callable[[By, str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: ElementState = ElementState.DISPLAYED,
+        state: Callable = Displayed(),
     ) -> List[TElement]:
         """
         Find child elements of type TElement of current element by its locator.

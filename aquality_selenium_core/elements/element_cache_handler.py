@@ -2,12 +2,13 @@
 from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
+from typing import Callable
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from aquality_selenium_core.elements.element_finder import AbstractElementFinder
-from aquality_selenium_core.elements.element_state import ElementState
+from aquality_selenium_core.elements.element_state import ExistsInAnyState
 
 
 class AbstractElementCacheHandler(ABC):
@@ -16,13 +17,11 @@ class AbstractElementCacheHandler(ABC):
     @property
     @abstractmethod
     def is_stale(self) -> bool:
-        """Determine whether the element stale or not."""
+        """Determine is the element stale."""
         pass
 
     @abstractmethod
-    def is_refresh_needed(
-        self, custom_state: ElementState = ElementState.DEFAULT
-    ) -> bool:
+    def is_refresh_needed(self, custom_state: Callable = ExistsInAnyState()) -> bool:
         """
         Determine is the cached element refresh needed.
 
@@ -35,7 +34,7 @@ class AbstractElementCacheHandler(ABC):
     def get_element(
         self,
         timeout: timedelta = timedelta.min,
-        custom_state: ElementState = ElementState.DEFAULT,
+        custom_state: Callable = ExistsInAnyState(),
     ) -> WebElement:
         """
         Allow to get cached element.
@@ -50,7 +49,7 @@ class AbstractElementCacheHandler(ABC):
 class ElementCacheHandler(AbstractElementCacheHandler):
     """Allows to use cached element."""
 
-    def __init__(self, locator: By, state: ElementState, finder: AbstractElementFinder):
+    def __init__(self, locator: By, state: Callable, finder: AbstractElementFinder):
         """Initialize handler with default state and finder."""
         self.__locator = locator
         self.__state = state
@@ -63,7 +62,7 @@ class ElementCacheHandler(AbstractElementCacheHandler):
         return self.__remote_element is not None and self.is_refresh_needed()
 
     def is_refresh_needed(
-        self, custom_state: ElementState = ElementState.DEFAULT
+        self, custom_state: Callable = ExistsInAnyState()
     ) -> bool:
         """
         Determine is the cached element refresh needed.
