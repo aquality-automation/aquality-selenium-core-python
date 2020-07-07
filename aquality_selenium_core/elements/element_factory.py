@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Callable
 from typing import List
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 
@@ -18,8 +19,8 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def get_custom_element(
         self,
-        supplier: Callable[[By, str, Callable], TElement],
-        locator: By,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        locator: Tuple[By, str],
         name: str,
         state: Callable = Displayed(),
     ) -> TElement:
@@ -38,9 +39,9 @@ class AbstractElementFactory(ABC):
     def find_child_element(
         self,
         parent_element: AbstractElement,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         state: Callable = Displayed(),
     ) -> TElement:
         """
@@ -59,9 +60,9 @@ class AbstractElementFactory(ABC):
     def find_child_elements(
         self,
         parent_element: AbstractElement,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable = Displayed(),
     ) -> List[TElement]:
@@ -81,9 +82,9 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def find_elements(
         self,
-        locator: By,
+        locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable = Displayed(),
     ) -> TElement:

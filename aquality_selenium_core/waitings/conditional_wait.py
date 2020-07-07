@@ -6,14 +6,41 @@ from datetime import timedelta
 from typing import Callable
 from typing import List
 from typing import Type
+from typing import TypeVar
+
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from aquality_selenium_core.configurations.timeout_configuration import (
     AbstractTimeoutConfiguration,
 )
 
+T = TypeVar("T")
+
 
 class AbstractConditionalWait(ABC):
     """Utility used to wait for some condition."""
+
+    @abstractmethod
+    def wait_for_with_driver(
+        self,
+        condition: Callable[[WebDriver], T],
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
+        message: str = "",
+        exceptions_to_ignore: List[Type[Exception]] = [],
+    ) -> T:
+        """
+        Wait for some condition using WebDriver within timeout.
+
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param message: Part of error message in case of TimeoutException.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
+        :return: Result of condition.
+        :raises: TimeoutException when timeout exceeded and condition not satisfied.
+        """
+        pass
 
     @abstractmethod
     def wait_for(
@@ -26,11 +53,10 @@ class AbstractConditionalWait(ABC):
         """
         Wait for some condition within timeout.
 
-        :param condition:               Function for waiting
-        :param timeout:                 Condition timeout (in seconds). Default value is taken from configuration.
-        :param polling_interval:        Condition check interval (in milliseconds). Default value is taken
-                                        from configuration.
-        :param exceptions_to_ignore:    Possible exceptions that have to be ignored.
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
         """
         pass
@@ -63,7 +89,26 @@ class ConditionalWait(AbstractConditionalWait):
         """Initialize with configuration."""
         self.__timeout_configuration = timeout_configuration
 
-    # TODO: implement method based on WebDriver wait
+    def wait_for_with_driver(
+        self,
+        condition: Callable[[WebDriver], T],
+        timeout: timedelta = timedelta.min,
+        polling_interval: timedelta = timedelta.min,
+        message: str = "",
+        exceptions_to_ignore: List[Type[Exception]] = [],
+    ) -> T:
+        """
+        Wait for some condition using WebDriver within timeout.
+
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param message: Part of error message in case of TimeoutException.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
+        :return: Result of condition.
+        :raises: TimeoutException when timeout exceeded and condition not satisfied.
+        """
+        raise NotImplementedError
 
     def wait_for(
         self,

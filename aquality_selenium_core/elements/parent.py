@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Callable
 from typing import List
+from typing import Tuple
 from typing import TypeVar
 
 from selenium.webdriver.common.by import By
@@ -19,9 +20,9 @@ class AbstractParent(ABC):
     @abstractmethod
     def find_child_element(
         self,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         state: Callable = Displayed(),
     ) -> TElement:
         """
@@ -38,9 +39,9 @@ class AbstractParent(ABC):
     @abstractmethod
     def find_child_elements(
         self,
-        child_locator: By,
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable = Displayed(),
     ) -> List[TElement]:
