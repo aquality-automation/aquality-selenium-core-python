@@ -22,11 +22,11 @@ class ElementCacheConfiguration(AbstractElementCacheConfiguration):
 
     def __init__(self, settings_file: AbstractSettingsFile):
         """Initialize configuration with settings file."""
-        self.__is_enabled = settings_file.is_value_present(
-            self.__IS_ENABLED_PATH
-        ) and bool(settings_file.get_value(self.__IS_ENABLED_PATH))
+        self.__settings_file = settings_file
 
     @property
     def is_enabled(self) -> bool:
         """Is element caching allowed or not."""
-        return self.__is_enabled
+        return self.__settings_file.is_value_present(self.__IS_ENABLED_PATH) and bool(
+            self.__settings_file.get_value(self.__IS_ENABLED_PATH)
+        )

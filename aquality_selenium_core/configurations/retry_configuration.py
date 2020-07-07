@@ -28,17 +28,15 @@ class RetryConfiguration(AbstractRetryConfiguration):
     def __init__(self, settings_file: AbstractSettingsFile):
         """Initialize configuration with settings file."""
         self.__settings_file = settings_file
-        self.__number = self.__settings_file.get_value("retry.number")
-        self.__polling_interval = timedelta(
-            milliseconds=self.__settings_file.get_value("retry.pollingInterval")
-        )
 
     @property
     def number(self) -> int:
         """Get the number of attempts to retry."""
-        return self.__number
+        return int(self.__settings_file.get_value("retry.number"))
 
     @property
     def polling_interval(self) -> timedelta:
         """Get the polling interval used in retry."""
-        return self.__polling_interval
+        return timedelta(
+            milliseconds=self.__settings_file.get_value("retry.pollingInterval")
+        )

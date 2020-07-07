@@ -22,6 +22,8 @@ class AbstractLoggerConfiguration(ABC):
 
 
 class LoggerConfiguration(AbstractLoggerConfiguration):
+    """Describes logger configuration."""
+
     __DEFAULT_LANGUAGE = "en"
     __DEFAULT_LOG_VALUE = True
 
@@ -32,8 +34,10 @@ class LoggerConfiguration(AbstractLoggerConfiguration):
     @property
     def language(self) -> str:
         """Get language of framework."""
-        return self.__settings_file.get_value_or_default(
-            "logger.language", self.__DEFAULT_LANGUAGE
+        return str(
+            self.__settings_file.get_value_or_default(
+                "logger.language", self.__DEFAULT_LANGUAGE
+            )
         )
 
     @property
