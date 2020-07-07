@@ -1,10 +1,7 @@
 """Module defines timeouts configuration."""
 from abc import ABC
 from abc import abstractmethod
-from enum import Enum
-
-from aquality_selenium_core.configurations.duration import Duration
-from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
+from datetime import timedelta
 
 
 class AbstractTimeoutConfiguration(ABC):
@@ -12,25 +9,25 @@ class AbstractTimeoutConfiguration(ABC):
 
     @property
     @abstractmethod
-    def implicit(self) -> int:
+    def implicit(self) -> timedelta:
         """Get WedDriver ImplicitWait timeout."""
         pass
 
     @property
     @abstractmethod
-    def condition(self) -> int:
+    def condition(self) -> timedelta:
         """Get default ConditionalWait timeout."""
         pass
 
     @property
     @abstractmethod
-    def polling_interval(self) -> int:
+    def polling_interval(self) -> timedelta:
         """Get ConditionalWait polling interval."""
         pass
 
     @property
     @abstractmethod
-    def command(self) -> int:
+    def command(self) -> timedelta:
         """Get WebDriver Command timeout."""
         pass
 
@@ -46,19 +43,19 @@ class TimeoutConfiguration(AbstractTimeoutConfiguration):
         self.__command: Duration = self.__get_duration_from_seconds(TimeOut.COMMAND)
 
     @property
-    def implicit(self) -> Duration:
+    def implicit(self) -> timedelta:
         return self.__implicit
 
     @property
-    def condition(self) -> Duration:
+    def condition(self) -> timedelta:
         return self.__condition
 
     @property
-    def polling_interval(self) -> Duration:
+    def polling_interval(self) -> timedelta:
         return self.__polling_interval
 
     @property
-    def command(self) -> Duration:
+    def command(self) -> timedelta:
         return self.__command
 
     def __get_time_out(self, time_out: Enum) -> int:
