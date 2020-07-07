@@ -45,6 +45,6 @@ class LoggerConfiguration(AbstractLoggerConfiguration):
         """Perform page source logging in case of catastrophic failures or not."""
         return bool(
             self.__settings_file.get_value_or_default(
-                "logger.logPageSource", self.__DEFAULT_LANGUAGE
+                "logger.logPageSource", self.__DEFAULT_LOG_VALUE
             )
         )
