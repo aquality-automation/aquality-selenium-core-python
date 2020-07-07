@@ -1,7 +1,6 @@
 """Module defines abstraction for element cache configuration."""
 from abc import ABC
 from abc import abstractmethod
-from abc import abstractmethod
 
 from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
 
@@ -17,13 +16,17 @@ class AbstractElementCacheConfiguration(ABC):
 
 
 class ElementCacheConfiguration(AbstractElementCacheConfiguration):
+    """Provides element's cache configuration."""
+
     __IS_ENABLED_PATH = "elementCache.isEnabled"
 
     def __init__(self, settings_file: AbstractSettingsFile):
-        self.__enabled: bool = settings_file.is_value_present(
+        """Initialize configuration with settings file."""
+        self.__is_enabled = settings_file.is_value_present(
             self.__IS_ENABLED_PATH
         ) and bool(settings_file.get_value(self.__IS_ENABLED_PATH))
 
     @property
     def is_enabled(self) -> bool:
-        return self.__enabled
+        """Is element caching allowed or not."""
+        return self.__is_enabled

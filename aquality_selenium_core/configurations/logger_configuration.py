@@ -2,6 +2,8 @@
 from abc import ABC
 from abc import abstractmethod
 
+from aquality_selenium_core.utilities.settings_file import AbstractSettingsFile
+
 
 class AbstractLoggerConfiguration(ABC):
     """Describes logger configuration."""
@@ -21,8 +23,10 @@ class AbstractLoggerConfiguration(ABC):
 
 class LoggerConfiguration(AbstractLoggerConfiguration):
     __DEFAULT_LANGUAGE = "en"
+    __DEFAULT_LOG_VALUE = True
 
     def __init__(self, settings_file: AbstractSettingsFile):
+        """Initialize configuration with settings file."""
         self.__settings_file = settings_file
 
     @property
@@ -35,6 +39,8 @@ class LoggerConfiguration(AbstractLoggerConfiguration):
     @property
     def log_page_source(self) -> bool:
         """Perform page source logging in case of catastrophic failures or not."""
-        return self.__settings_file.get_value_or_default(
-            "logger.logPageSource", self.__DEFAULT_LANGUAGE
+        return bool(
+            self.__settings_file.get_value_or_default(
+                "logger.logPageSource", self.__DEFAULT_LANGUAGE
+            )
         )

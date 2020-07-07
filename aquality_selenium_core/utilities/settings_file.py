@@ -20,6 +20,17 @@ class AbstractSettingsFile(ABC):
         pass
 
     @abstractmethod
+    def get_value_or_default(self, path: str, default: Any) -> Any:
+        """
+        Get single value by specified path from settings file or default if not present.
+
+        :param path: Path to value.
+        :param default: Default value.
+        :return: Value from file or default if not present.
+        """
+        pass
+
+    @abstractmethod
     def get_list(self, path: str) -> List[str]:
         """
         Get list of values by specified path from settings file.
