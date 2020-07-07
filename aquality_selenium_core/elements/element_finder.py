@@ -12,15 +12,7 @@ from aquality_selenium_core.elements.element_state import ExistsInAnyState
 
 
 class AbstractElementFinder(ABC):
-    """
-    Provides ability to find elements by locator and search criteria.
-
-    The criteria for search could be:
-    - empty - to get all elements;
-    - desired - from ElementState;
-    - with - DesiredState;
-    - with - Predicate.
-    """
+    """Provides ability to find elements by locator and search criteria."""
 
     @abstractmethod
     def find_element(
@@ -30,7 +22,7 @@ class AbstractElementFinder(ABC):
         timeout: timedelta = timedelta.min,
     ) -> WebElement:
         """
-        Find element in desired ElementState or state defined by predicate.
+        Find element in desired state defined by callable object.
 
         :param locator: element locator.
         :param desired_state: desired element state as callable object.
@@ -48,7 +40,7 @@ class AbstractElementFinder(ABC):
         timeout: timedelta = timedelta.min,
     ) -> List[WebElement]:
         """
-        Find elements in desired ElementState or state defined by predicate.
+        Find elements in desired state defined by callable object.
 
         :param locator: element locator.
         :param desired_state: desired element state as callable object.
