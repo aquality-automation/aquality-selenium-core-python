@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import cast
 from typing import List
 from typing import Tuple
 
@@ -21,7 +22,7 @@ class AbstractElementFinder(ABC):
         self,
         locator: Tuple[By, str],
         desired_state: Callable[[WebElement], bool] = ExistsInAnyState(),
-        timeout: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
     ) -> WebElement:
         """
         Find element in desired state defined by callable object.
@@ -39,7 +40,7 @@ class AbstractElementFinder(ABC):
         self,
         locator: Tuple[By, str],
         desired_state: Callable[[WebElement], bool] = ExistsInAnyState(),
-        timeout: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
     ) -> List[WebElement]:
         """
         Find elements in desired state defined by callable object.
@@ -56,7 +57,7 @@ class AbstractElementFinder(ABC):
         self,
         locator: Tuple[By, str],
         desired_state: DesiredState,
-        timeout: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
     ):
         """
         Find elements in desired state defined by DesiredState object.

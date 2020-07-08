@@ -37,7 +37,7 @@ class AbstractElementCacheHandler(ABC):
     @abstractmethod
     def get_element(
         self,
-        timeout: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
         custom_state: Callable[[WebElement], bool] = cast(Callable, None),
     ) -> WebElement:
         """
@@ -54,7 +54,10 @@ class ElementCacheHandler(AbstractElementCacheHandler):
     """Allows to use cached element."""
 
     def __init__(
-        self, locator: Tuple[By, str], state: Callable, finder: AbstractElementFinder
+        self,
+        locator: Tuple[By, str],
+        state: Callable[[WebElement], bool],
+        finder: AbstractElementFinder,
     ):
         """Initialize handler with default state and finder."""
         self.__locator = locator
@@ -85,7 +88,7 @@ class ElementCacheHandler(AbstractElementCacheHandler):
 
     def get_element(
         self,
-        timeout: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
         custom_state: Callable[[WebElement], bool] = cast(Callable, None),
     ) -> WebElement:
         """

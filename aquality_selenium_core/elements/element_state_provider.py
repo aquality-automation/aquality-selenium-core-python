@@ -3,6 +3,7 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import cast
 from typing import List
 from typing import Tuple
 from typing import Type
@@ -70,7 +71,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_displayed(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element is displayed on the page.
 
@@ -80,7 +81,9 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_displayed(
+        self, timeout: timedelta = cast(timedelta, None)
+    ) -> bool:
         """
         Wait for element is not displayed on the page.
 
@@ -90,7 +93,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element exists in DOM (without visibility check).
 
@@ -100,7 +103,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not exist in DOM (without visibility check).
 
@@ -110,7 +113,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element has enabled state which means element is Enabled and does not have "disabled" class.
 
@@ -121,7 +124,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_not_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not have enabled state which means element is not Enabled or does have "disabled" class.
 
@@ -132,7 +135,7 @@ class AbstractElementStateProvider(ABC):
         pass
 
     @abstractmethod
-    def wait_for_clickable(self, timeout: timedelta = timedelta.min) -> None:
+    def wait_for_clickable(self, timeout: timedelta = cast(timedelta, None)) -> None:
         """
         Wait for element to become clickable which means element is displayed and enabled.
 
@@ -196,7 +199,7 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         return self.__is_element_clickable(timedelta(), True)
 
-    def wait_for_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_displayed(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element is displayed on the page.
 
@@ -205,7 +208,9 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         return self.__is_any_element_found(timeout, Displayed())
 
-    def wait_for_not_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_displayed(
+        self, timeout: timedelta = cast(timedelta, None)
+    ) -> bool:
         """
         Wait for element is not displayed on the page.
 
@@ -214,7 +219,7 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         return self.__conditional_wait.wait_for(lambda: not self.is_displayed, timeout)
 
-    def wait_for_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element exists in DOM (without visibility check).
 
@@ -223,7 +228,7 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         return self.__is_any_element_found(timeout, ExistsInAnyState())
 
-    def wait_for_not_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not exist in DOM (without visibility check).
 
@@ -232,7 +237,7 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         return self.__conditional_wait.wait_for(lambda: not self.is_exist, timeout)
 
-    def wait_for_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element has enabled state which means element is Enabled and does not have "disabled" class.
 
@@ -244,7 +249,7 @@ class ElementStateProvider(AbstractElementStateProvider):
             timeout, lambda element: bool(element.is_enabled()), "ENABLED"
         )
 
-    def wait_for_not_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not have enabled state which means element is not Enabled or does have "disabled" class.
 
@@ -256,7 +261,7 @@ class ElementStateProvider(AbstractElementStateProvider):
             timeout, lambda element: not bool(element.is_enabled()), "NOT ENABLED"
         )
 
-    def wait_for_clickable(self, timeout: timedelta = timedelta.min) -> None:
+    def wait_for_clickable(self, timeout: timedelta = cast(timedelta, None)) -> None:
         """
         Wait for element to become clickable which means element is displayed and enabled.
 
@@ -265,7 +270,9 @@ class ElementStateProvider(AbstractElementStateProvider):
         """
         self.__is_element_clickable(timeout, False)
 
-    def __is_any_element_found(self, timeout: timedelta, state: Callable) -> bool:
+    def __is_any_element_found(
+        self, timeout: timedelta, state: Callable[[WebElement], bool]
+    ) -> bool:
         found_elements = self.__element_finder.find_elements(
             self.__element_locator, state, timeout
         )
@@ -362,7 +369,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
             lambda element: bool(element.is_displayed()) and bool(element.is_enabled())
         )
 
-    def wait_for_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_displayed(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element is displayed on the page.
 
@@ -376,7 +383,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
             timeout,
         )
 
-    def wait_for_not_displayed(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_displayed(
+        self, timeout: timedelta = cast(timedelta, None)
+    ) -> bool:
         """
         Wait for element is not displayed on the page.
 
@@ -385,7 +394,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         """
         return self._wait_for_condition(lambda: not self.is_displayed, timeout)
 
-    def wait_for_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element exists in DOM (without visibility check).
 
@@ -396,7 +405,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
             lambda: self._try_invoke_function(lambda element: True), timeout
         )
 
-    def wait_for_not_exist(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_exist(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not exist in DOM (without visibility check).
 
@@ -405,7 +414,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         """
         return self._wait_for_condition(lambda: not self.is_exist, timeout)
 
-    def wait_for_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element has enabled state which means element is Enabled and does not have "disabled" class.
 
@@ -415,7 +424,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         """
         return self._wait_for_condition(lambda: self.is_enabled, timeout)
 
-    def wait_for_not_enabled(self, timeout: timedelta = timedelta.min) -> bool:
+    def wait_for_not_enabled(self, timeout: timedelta = cast(timedelta, None)) -> bool:
         """
         Wait for element does not have enabled state which means element is not Enabled or does have "disabled" class.
 
@@ -425,7 +434,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         """
         return self._wait_for_condition(lambda: not self.is_enabled, timeout)
 
-    def wait_for_clickable(self, timeout: timedelta = timedelta.min) -> None:
+    def wait_for_clickable(self, timeout: timedelta = cast(timedelta, None)) -> None:
         """
         Wait for element to become clickable which means element is displayed and enabled.
 

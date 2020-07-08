@@ -20,7 +20,9 @@ class AbstractElementFactory(ABC):
     @abstractmethod
     def get_custom_element(
         self,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        supplier: Callable[
+            [Tuple[By, str], str, Callable[[WebElement], bool]], TElement
+        ],
         locator: Tuple[By, str],
         name: str,
         state: Callable[[WebElement], bool] = Displayed(),
@@ -42,7 +44,9 @@ class AbstractElementFactory(ABC):
         parent_element: AbstractElement,
         child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        supplier: Callable[
+            [Tuple[By, str], str, Callable[[WebElement], bool]], TElement
+        ],
         state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
@@ -63,7 +67,9 @@ class AbstractElementFactory(ABC):
         parent_element: AbstractElement,
         child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        supplier: Callable[
+            [Tuple[By, str], str, Callable[[WebElement], bool]], TElement
+        ],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable[[WebElement], bool] = Displayed(),
     ) -> List[TElement]:
@@ -85,7 +91,9 @@ class AbstractElementFactory(ABC):
         self,
         locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        supplier: Callable[
+            [Tuple[By, str], str, Callable[[WebElement], bool]], TElement
+        ],
         expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:

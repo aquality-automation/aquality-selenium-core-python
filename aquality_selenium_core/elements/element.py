@@ -50,7 +50,9 @@ from aquality_selenium_core.waitings.conditional_wait import AbstractConditional
 class AbstractElement(ABC):
     """Base class for any custom element."""
 
-    def __init__(self, locator: Tuple[By, str], name: str, state: Callable):
+    def __init__(
+        self, locator: Tuple[By, str], name: str, state: Callable[[WebElement], bool]
+    ):
         """Initialize element with locator, name and state."""
         self.__locator = locator
         self.__name = name
@@ -144,7 +146,7 @@ class AbstractElement(ABC):
 
         self._do_with_retry(func)
 
-    def get_element(self, timeout: timedelta = timedelta.min) -> WebElement:
+    def get_element(self, timeout: timedelta = cast(timedelta, None)) -> WebElement:
         """
         Get current element by specified locator.
 
@@ -243,7 +245,7 @@ class AbstractElement(ABC):
         child_locator: Tuple[By, str],
         name: str,
         supplier: Callable[[Tuple[By, str], str, Callable], TElement],
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
         Find the child element of type TElement of current element by its locator.
@@ -264,7 +266,7 @@ class AbstractElement(ABC):
         name: str,
         supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> List[TElement]:
         """
         Find child elements of current element by its locator.
