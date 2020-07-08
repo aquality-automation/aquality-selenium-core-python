@@ -27,6 +27,6 @@ class ElementCacheConfiguration(AbstractElementCacheConfiguration):
     @property
     def is_enabled(self) -> bool:
         """Is element caching allowed or not."""
-        return self.__settings_file.is_value_present(self.__IS_ENABLED_PATH) and bool(
-            self.__settings_file.get_value(self.__IS_ENABLED_PATH)
-        )
+        return self.__settings_file.is_value_present(
+            self.__IS_ENABLED_PATH
+        ) and self.__settings_file.get_value(self.__IS_ENABLED_PATH)

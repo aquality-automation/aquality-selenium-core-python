@@ -32,7 +32,7 @@ class RetryConfiguration(AbstractRetryConfiguration):
     @property
     def number(self) -> int:
         """Get the number of attempts to retry."""
-        return int(self.__settings_file.get_value("retry.number"))
+        return self.__settings_file.get_value("retry.number")
 
     @property
     def polling_interval(self) -> timedelta:

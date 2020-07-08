@@ -64,4 +64,4 @@ class TimeoutConfiguration(AbstractTimeoutConfiguration):
         return timedelta(seconds=self.__get_timeout("timeouts.timeoutCommand"))
 
     def __get_timeout(self, key: str) -> int:
-        return int(self.__settings_file.get_value(key))
+        return self.__settings_file.get_value(key)
