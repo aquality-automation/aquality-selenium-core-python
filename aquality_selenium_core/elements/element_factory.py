@@ -300,8 +300,12 @@ class ElementFactory(AbstractElementFactory):
             )
         else:
             raise ValueError(
-                f"Multiple elements' baseLocator type {base_locator} is not supported yet"
+                f"Multiple elements' base_locator type {base_locator} is not supported yet"
             )
+
+    @staticmethod
+    def _is_locator_supported_for_xpath_extraction(locator: Tuple[By, str]) -> bool:
+        return locator[0] in [By.XPATH, By.TAG_NAME]
 
     @staticmethod
     def _extract_xpath_from_locator(locator: Tuple[By, str]) -> str:
@@ -313,7 +317,3 @@ class ElementFactory(AbstractElementFactory):
                 f"Cannot define xpath from locator {locator_value}. Locator type {locator_type} is not supported yet."
             )
         return locators_map[locator_type]
-
-    @staticmethod
-    def _is_locator_supported_for_xpath_extraction(locator: Tuple[By, str]) -> bool:
-        return locator[0] in [By.XPATH, By.TAG_NAME]
