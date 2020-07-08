@@ -1,10 +1,14 @@
-"""Module defines abstraction for element state."""
+"""Module defines element state providers."""
 from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import List
 from typing import Tuple
+from typing import Type
 
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -321,7 +325,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
 
         :return: true if displayed and false otherwise.
         """
-        pass
+        return not self.__element_cache_handler.is_stale and self._try_invoke_function(
+            lambda element: bool(element.is_displayed())
+        )
 
     @property
     def is_exist(self) -> bool:
@@ -330,7 +336,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
 
         :return: true if element exists in DOM (without visibility check) and false otherwise.
         """
-        pass
+        return not self.__element_cache_handler.is_stale and self._try_invoke_function(
+            lambda element: True
+        )
 
     @property
     def is_enabled(self) -> bool:
@@ -339,7 +347,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
 
         :return: true if enabled, false otherwise.
         """
-        pass
+        return self._try_invoke_function(
+            lambda element: bool(element.is_enabled()), [StaleElementReferenceException]
+        )
 
     @property
     def is_clickable(self) -> bool:
@@ -348,7 +358,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
 
         :return: true if element is clickable, false otherwise.
         """
-        pass
+        return self._try_invoke_function(
+            lambda element: bool(element.is_displayed()) and bool(element.is_enabled())
+        )
 
     def wait_for_displayed(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -357,7 +369,12 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :param timeout: Timeout for waiting. Default value is taken from TimeoutConfiguration.
         :return: true if element displayed after waiting, false otherwise.
         """
-        pass
+        return self._wait_for_condition(
+            lambda: self._try_invoke_function(
+                lambda element: bool(element.is_displayed())
+            ),
+            timeout,
+        )
 
     def wait_for_not_displayed(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -366,7 +383,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :param timeout: Timeout for waiting. Default value is taken from TimeoutConfiguration.
         :return: true if element is not displayed after waiting, false otherwise.
         """
-        pass
+        return self._wait_for_condition(lambda: not self.is_displayed, timeout)
 
     def wait_for_exist(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -375,7 +392,9 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :param timeout: Timeout for waiting. Default value is taken from TimeoutConfiguration.
         :return: true if element exist after waiting, false otherwise.
         """
-        pass
+        return self._wait_for_condition(
+            lambda: self._try_invoke_function(lambda element: True), timeout
+        )
 
     def wait_for_not_exist(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -384,7 +403,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :param timeout: Timeout for waiting. Default value is taken from TimeoutConfiguration.
         :return: true if element does not exist after waiting, false otherwise.
         """
-        pass
+        return self._wait_for_condition(lambda: not self.is_exist, timeout)
 
     def wait_for_enabled(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -394,7 +413,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :return: True if enabled, false otherwise.
         :raises: NoSuchElementException when timeout exceeded and element not found.
         """
-        pass
+        return self._wait_for_condition(lambda: self.is_enabled, timeout)
 
     def wait_for_not_enabled(self, timeout: timedelta = timedelta.min) -> bool:
         """
@@ -404,7 +423,7 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :return: True if not enabled, false otherwise.
         :raises: NoSuchElementException when timeout exceeded and element not found.
         """
-        pass
+        return self._wait_for_condition(lambda: not self.is_enabled, timeout)
 
     def wait_for_clickable(self, timeout: timedelta = timedelta.min) -> None:
         """
@@ -413,4 +432,37 @@ class CachedElementStateProvider(AbstractElementStateProvider):
         :param timeout: Timeout for waiting. Default value is taken from TimeoutConfiguration.
         :raises: WebDriverTimeoutException when timeout exceeded and element is not clickable.
         """
-        pass
+        return self.__conditional_wait.wait_for_true(lambda: self.is_clickable, timeout)
+
+    def _try_invoke_function(
+        self,
+        func: Callable[[WebElement], bool],
+        exceptions_to_handle: List[Type[Exception]] = [],
+    ) -> bool:
+        handled_exceptions = (
+            exceptions_to_handle
+            if any(exceptions_to_handle)
+            else self._handled_exceptions
+        )
+        try:
+            return func(
+                self.__element_cache_handler.get_element(
+                    timedelta(), ExistsInAnyState()
+                )
+            )
+        except Exception as exception:
+            if any(
+                isinstance(exception, handled_exception)
+                for handled_exception in handled_exceptions
+            ):
+                return False
+            raise
+
+    @property
+    def _handled_exceptions(self) -> List[Type[Exception]]:
+        return [StaleElementReferenceException, NoSuchElementException]
+
+    def _wait_for_condition(
+        self, condition: Callable[..., bool], timeout: timedelta
+    ) -> bool:
+        return self.__conditional_wait.wait_for(condition, timeout)
