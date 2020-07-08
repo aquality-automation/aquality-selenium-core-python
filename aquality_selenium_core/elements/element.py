@@ -257,7 +257,7 @@ class AbstractElement(ABC):
         :return: Instance of child element.
         """
         return self._element_factory.find_child_element(
-            self, child_locator, name, supplier, state
+            self, supplier, child_locator, name, state
         )
 
     def find_child_elements(
@@ -279,5 +279,5 @@ class AbstractElement(ABC):
         :return: List of child elements.
         """
         return self._element_factory.find_child_elements(
-            self, child_locator, name, supplier, expected_count, state
+            self, supplier, child_locator, name, state, expected_count
         )
