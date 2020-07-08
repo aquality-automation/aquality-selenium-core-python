@@ -25,8 +25,8 @@ class AbstractConditionalWait(ABC):
     def wait_for_with_driver(
         self,
         condition: Callable[[WebDriver], T],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> T:
@@ -93,8 +93,8 @@ class ConditionalWait(AbstractConditionalWait):
     def wait_for_with_driver(
         self,
         condition: Callable[[WebDriver], T],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> T:
