@@ -37,6 +37,5 @@ class RetryConfiguration(AbstractRetryConfiguration):
     @property
     def polling_interval(self) -> timedelta:
         """Get the polling interval used in retry."""
-        return timedelta(
-            milliseconds=self.__settings_file.get_value("retry.pollingInterval")
-        )
+        config_value: int = self.__settings_file.get_value("retry.pollingInterval")
+        return timedelta(milliseconds=config_value)

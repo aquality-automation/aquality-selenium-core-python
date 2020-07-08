@@ -44,24 +44,26 @@ class TimeoutConfiguration(AbstractTimeoutConfiguration):
     @property
     def implicit(self) -> timedelta:
         """Get WedDriver ImplicitWait timeout."""
-        return timedelta(seconds=self.__get_timeout("timeouts.timeoutImplicit"))
+        config_value = self.__get_config_value("timeouts.timeoutImplicit")
+        return timedelta(seconds=config_value)
 
     @property
     def condition(self) -> timedelta:
         """Get default ConditionalWait timeout."""
-        return timedelta(seconds=self.__get_timeout("timeouts.timeoutCondition"))
+        config_value = self.__get_config_value("timeouts.timeoutCondition")
+        return timedelta(seconds=config_value)
 
     @property
     def polling_interval(self) -> timedelta:
         """Get ConditionalWait polling interval."""
-        return timedelta(
-            milliseconds=self.__get_timeout("timeouts.timeoutPollingInterval")
-        )
+        config_value = self.__get_config_value("timeouts.timeoutPollingInterval")
+        return timedelta(milliseconds=config_value)
 
     @property
     def command(self) -> timedelta:
         """Get WebDriver Command timeout."""
-        return timedelta(seconds=self.__get_timeout("timeouts.timeoutCommand"))
+        config_value = self.__get_config_value("timeouts.timeoutCommand")
+        return timedelta(seconds=config_value)
 
-    def __get_timeout(self, key: str) -> int:
+    def __get_config_value(self, key: str) -> int:
         return self.__settings_file.get_value(key)

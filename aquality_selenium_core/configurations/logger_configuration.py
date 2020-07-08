@@ -24,9 +24,6 @@ class AbstractLoggerConfiguration(ABC):
 class LoggerConfiguration(AbstractLoggerConfiguration):
     """Describes logger configuration."""
 
-    __DEFAULT_LANGUAGE = "en"
-    __DEFAULT_LOG_VALUE = True
-
     def __init__(self, settings_file: AbstractSettingsFile):
         """Initialize configuration with settings file."""
         self.__settings_file = settings_file
@@ -34,13 +31,9 @@ class LoggerConfiguration(AbstractLoggerConfiguration):
     @property
     def language(self) -> str:
         """Get language of framework."""
-        return self.__settings_file.get_value_or_default(
-            "logger.language", self.__DEFAULT_LANGUAGE
-        )
+        return self.__settings_file.get_value_or_default("logger.language", "en")
 
     @property
     def log_page_source(self) -> bool:
         """Perform page source logging in case of catastrophic failures or not."""
-        return self.__settings_file.get_value_or_default(
-            "logger.logPageSource", self.__DEFAULT_LOG_VALUE
-        )
+        return self.__settings_file.get_value_or_default("logger.logPageSource", True)
