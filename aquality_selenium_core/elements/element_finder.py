@@ -3,8 +3,8 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
-from typing import Dict
 from typing import cast
+from typing import Dict
 from typing import List
 from typing import Tuple
 
