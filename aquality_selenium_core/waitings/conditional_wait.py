@@ -4,33 +4,60 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import cast
 from typing import List
 from typing import Type
+from typing import TypeVar
+
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from aquality_selenium_core.configurations.timeout_configuration import (
     AbstractTimeoutConfiguration,
 )
+
+T = TypeVar("T")
 
 
 class AbstractConditionalWait(ABC):
     """Utility used to wait for some condition."""
 
     @abstractmethod
+    def wait_for_with_driver(
+        self,
+        condition: Callable[[WebDriver], T],
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
+        message: str = "",
+        exceptions_to_ignore: List[Type[Exception]] = [],
+    ) -> T:
+        """
+        Wait for some condition using WebDriver within timeout.
+
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param message: Part of error message in case of TimeoutException.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
+        :return: Result of condition.
+        :raises: TimeoutException when timeout exceeded and condition not satisfied.
+        """
+        pass
+
+    @abstractmethod
     def wait_for(
         self,
         condition: Callable[..., bool],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
         Wait for some condition within timeout.
 
-        :param condition:               Function for waiting
-        :param timeout:                 Condition timeout (in seconds). Default value is taken from configuration.
-        :param polling_interval:        Condition check interval (in milliseconds). Default value is taken
-                                        from configuration.
-        :param exceptions_to_ignore:    Possible exceptions that have to be ignored.
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
         :return: True if condition satisfied and false otherwise.
         """
         pass
@@ -39,8 +66,8 @@ class AbstractConditionalWait(ABC):
     def wait_for_true(
         self,
         condition: Callable[..., bool],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> None:
@@ -63,13 +90,32 @@ class ConditionalWait(AbstractConditionalWait):
         """Initialize with configuration."""
         self.__timeout_configuration = timeout_configuration
 
-    # TODO: implement method based on WebDriver wait
+    def wait_for_with_driver(
+        self,
+        condition: Callable[[WebDriver], T],
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
+        message: str = "",
+        exceptions_to_ignore: List[Type[Exception]] = [],
+    ) -> T:
+        """
+        Wait for some condition using WebDriver within timeout.
+
+        :param condition: Function for waiting
+        :param timeout: Condition timeout (in seconds). Default value is taken from configuration.
+        :param polling_interval: Condition check interval (in milliseconds). Default value is taken from configuration.
+        :param message: Part of error message in case of TimeoutException.
+        :param exceptions_to_ignore: Possible exceptions that have to be ignored.
+        :return: Result of condition.
+        :raises: TimeoutException when timeout exceeded and condition not satisfied.
+        """
+        raise NotImplementedError
 
     def wait_for(
         self,
         condition: Callable[..., bool],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> bool:
         """
@@ -96,8 +142,8 @@ class ConditionalWait(AbstractConditionalWait):
     def wait_for_true(
         self,
         condition: Callable[..., bool],
-        timeout: timedelta = timedelta.min,
-        polling_interval: timedelta = timedelta.min,
+        timeout: timedelta = cast(timedelta, None),
+        polling_interval: timedelta = cast(timedelta, None),
         message: str = "",
         exceptions_to_ignore: List[Type[Exception]] = [],
     ) -> None:
@@ -141,17 +187,15 @@ class ConditionalWait(AbstractConditionalWait):
             raise
 
     def __resolve_condition_timeout(self, timeout: timedelta) -> int:
-        timeout = (
-            timeout
-            if timeout != timedelta.min
-            else self.__timeout_configuration.condition
+        condition_timeout = (
+            timeout if timeout is not None else self.__timeout_configuration.condition
         )
-        return timeout.seconds
+        return condition_timeout.seconds
 
     def __resolve_polling_interval(self, polling_interval: timedelta) -> int:
         interval = (
             polling_interval
-            if polling_interval != timedelta.min
+            if polling_interval is not None
             else self.__timeout_configuration.polling_interval
         )
         return interval.seconds

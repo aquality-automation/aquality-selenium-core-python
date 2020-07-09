@@ -3,6 +3,8 @@ from abc import ABC
 from abc import abstractmethod
 from datetime import timedelta
 from typing import Callable
+from typing import cast
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -21,20 +23,28 @@ class AbstractElementCacheHandler(ABC):
         pass
 
     @abstractmethod
-    def is_refresh_needed(self) -> bool:
+    def is_refresh_needed(
+        self, custom_state: Callable[[WebElement], bool] = cast(Callable, None)
+    ) -> bool:
         """
         Determine is the cached element refresh needed.
 
+        :param custom_state: Element custom state.
         :return: true if needed and false otherwise.
         """
         pass
 
     @abstractmethod
-    def get_element(self, timeout: timedelta = timedelta.min) -> WebElement:
+    def get_element(
+        self,
+        timeout: timedelta = cast(timedelta, None),
+        custom_state: Callable[[WebElement], bool] = cast(Callable, None),
+    ) -> WebElement:
         """
         Allow to get cached element.
 
         :param timeout: Timeout used to retrieve the element when refresh is needed.
+        :param custom_state: Element custom state.
         :return: Cached element.
         """
         pass
@@ -43,7 +53,12 @@ class AbstractElementCacheHandler(ABC):
 class ElementCacheHandler(AbstractElementCacheHandler):
     """Allows to use cached element."""
 
-    def __init__(self, locator: By, state: Callable, finder: AbstractElementFinder):
+    def __init__(
+        self,
+        locator: Tuple[By, str],
+        state: Callable[[WebElement], bool],
+        finder: AbstractElementFinder,
+    ):
         """Initialize handler with default state and finder."""
         self.__locator = locator
         self.__state = state
@@ -55,26 +70,35 @@ class ElementCacheHandler(AbstractElementCacheHandler):
         """Determine whether the element stale or not."""
         return self.__remote_element is not None and self.is_refresh_needed()
 
-    def is_refresh_needed(self) -> bool:
+    def is_refresh_needed(
+        self, custom_state: Callable[[WebElement], bool] = cast(Callable, None)
+    ) -> bool:
         """
         Determine is the cached element refresh needed.
 
+        :param custom_state: Element custom state.
         :return: true if needed and false otherwise.
         """
         if self.__remote_element is None:
             return True
 
+        state = self.__state if custom_state is None else custom_state
         is_displayed = self.__remote_element.is_displayed()
-        return isinstance(self.__state, Displayed) and not is_displayed
+        return isinstance(state, Displayed) and not is_displayed
 
-    def get_element(self, timeout: timedelta = timedelta.min) -> WebElement:
+    def get_element(
+        self,
+        timeout: timedelta = cast(timedelta, None),
+        custom_state: Callable[[WebElement], bool] = cast(Callable, None),
+    ) -> WebElement:
         """
         Allow to get cached element.
 
         :param timeout: Timeout used to retrieve the element when refresh is needed.
+        :param custom_state: Element custom state.
         :return: Cached element.
         """
-        if self.is_refresh_needed():
+        if self.is_refresh_needed(custom_state):
             self.__remote_element = self.__element_finder.find_element(
                 self.__locator, self.__state, timeout
             )
