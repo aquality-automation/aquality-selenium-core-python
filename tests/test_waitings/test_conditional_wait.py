@@ -5,7 +5,9 @@ from hamcrest import calling
 from hamcrest import equal_to
 from hamcrest import is_not
 from hamcrest import raises
+from selenium.webdriver.remote.webdriver import WebDriver
 
+from aquality_selenium_core.applications.application import AbstractApplication
 from aquality_selenium_core.configurations.timeout_configuration import (
     AbstractTimeoutConfiguration,
 )
@@ -124,7 +126,7 @@ class TestConditionalWait:
     @staticmethod
     def __get_conditional_wait() -> AbstractConditionalWait:
         timeout_configuration = CustomTimeoutConfiguration()
-        return ConditionalWait(timeout_configuration)
+        return ConditionalWait(timeout_configuration, Application())
 
 
 class CustomException(Exception):
@@ -147,3 +149,16 @@ class CustomTimeoutConfiguration(AbstractTimeoutConfiguration):
     @property
     def command(self) -> timedelta:
         return timedelta(seconds=5)
+
+
+class Application(AbstractApplication):
+    @property
+    def driver(self) -> WebDriver:
+        pass
+
+    @property
+    def is_started(self) -> bool:
+        pass
+
+    def set_implicit_wait_timeout(self, value: timedelta) -> None:
+        pass
