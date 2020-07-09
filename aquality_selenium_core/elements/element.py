@@ -249,7 +249,7 @@ class AbstractElement(AbstractParent, ABC):
         state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
-        Find child element ot type TElement of current element by its locator.
+        Find child element of type TElement of current element by its locator.
 
         :param supplier: Callable object that defines constructor of child element in case of custom element.
         :param child_locator: Locator of child element.
