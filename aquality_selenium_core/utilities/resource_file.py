@@ -1,16 +1,17 @@
 """Module defines work with getting data from files."""
 import os
-import sys
+from typing import cast
 
-import rootpath
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class ResourceFile:
     """Class, which defines getting data from file."""
 
-    def __init__(self, resource_name: str):
+    def __init__(self, resource_name: str, root_dir: str = cast(str, None)):
         """Initialize resource file by provided path."""
         self.__resource_name = resource_name
+        self.__root_dir = root_dir
         self.__file_canonical_path = self.get_resource_path(resource_name)
         self.__file_content = self.__get_resource_file_content()
 
@@ -18,19 +19,15 @@ class ResourceFile:
         with open(self.__file_canonical_path, encoding="utf8") as raw_data:
             return raw_data.read()
 
-    @staticmethod
-    def get_resource_path(resource_name: str) -> str:
+    def get_resource_path(self, resource_name: str) -> str:
         """
         Get path to resource by its name.
 
         :param resource_name: name of resource file with extension.
         :return: path to resource.
         """
-        frame = sys._getframe(1).f_globals["__package__"]
-        path_to_file = os.path.join(
-            rootpath.detect(), frame.split(".")[0], "resources", resource_name
-        )
-        return path_to_file
+        root = ROOT_DIR if self.__root_dir is None else self.__root_dir
+        return os.path.join(root, "resources", resource_name)
 
     @property
     def file_content(self) -> str:

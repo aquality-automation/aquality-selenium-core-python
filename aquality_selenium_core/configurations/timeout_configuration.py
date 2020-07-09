@@ -66,4 +66,4 @@ class TimeoutConfiguration(AbstractTimeoutConfiguration):
         return timedelta(seconds=config_value)
 
     def __get_config_value(self, key: str) -> int:
-        return self.__settings_file.get_value(key)
+        return int(self.__settings_file.get_value(key))

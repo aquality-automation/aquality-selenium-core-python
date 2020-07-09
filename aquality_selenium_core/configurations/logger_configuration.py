@@ -31,9 +31,11 @@ class LoggerConfiguration(AbstractLoggerConfiguration):
     @property
     def language(self) -> str:
         """Get language of framework."""
-        return self.__settings_file.get_value_or_default("logger.language", "en")
+        return str(self.__settings_file.get_value_or_default("logger.language", "en"))
 
     @property
     def log_page_source(self) -> bool:
         """Perform page source logging in case of catastrophic failures or not."""
-        return self.__settings_file.get_value_or_default("logger.logPageSource", True)
+        return bool(
+            self.__settings_file.get_value_or_default("logger.logPageSource", True)
+        )
