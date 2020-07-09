@@ -21,17 +21,17 @@ class AbstractParent(ABC):
     @abstractmethod
     def find_child_element(
         self,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
         Find child element ot type TElement of current element by its locator.
 
+        :param supplier: Callable object that defines constructor of child element in case of custom element.
         :param child_locator: Locator of child element.
         :param name: Child element name.
-        :param supplier: Delegate that defines constructor of child element in case of custom element.
         :param state: Child element state.
         :return: Instance of child element.
         """
@@ -40,20 +40,20 @@ class AbstractParent(ABC):
     @abstractmethod
     def find_child_elements(
         self,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
         child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
-        expected_count: ElementsCount = ElementsCount.ANY,
         state: Callable[[WebElement], bool] = Displayed(),
+        expected_count: ElementsCount = ElementsCount.ANY,
     ) -> List[TElement]:
         """
         Find child elements of type TElement of current element by its locator.
 
+        :param supplier: Callable object that defines constructor of child element in case of custom element.
         :param child_locator: Locator of child elements relative to their parent.
         :param name: Child elements name.
-        :param supplier: Delegate that defines constructor of child element in case of custom element type.
-        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Child elements state.
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :return: List of child elements.
         """
         pass
