@@ -13,11 +13,6 @@ class ResourceFile:
         self.__resource_name = resource_name
         self.__root_dir = root_dir
         self.__file_canonical_path = self.get_resource_path(resource_name)
-        self.__file_content = self.__get_resource_file_content()
-
-    def __get_resource_file_content(self) -> str:
-        with open(self.__file_canonical_path, encoding="utf8") as raw_data:
-            return raw_data.read()
 
     def get_resource_path(self, resource_name: str) -> str:
         """
@@ -30,9 +25,15 @@ class ResourceFile:
         return os.path.join(root, "resources", resource_name)
 
     @property
+    def exists(self) -> bool:
+        """Check whether resource file exist or not."""
+        return os.path.exists(self.__file_canonical_path)
+
+    @property
     def file_content(self) -> str:
         """Get file content as string."""
-        return self.__file_content
+        with open(self.__file_canonical_path, encoding="utf8") as raw_data:
+            return raw_data.read()
 
     @property
     def resource_name(self) -> str:
