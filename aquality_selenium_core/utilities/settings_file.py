@@ -4,21 +4,23 @@ import logging
 import os
 from abc import ABC
 from abc import abstractmethod
-from typing import Any
 from typing import Dict
 from typing import List
+from typing import TypeVar
 from typing import Optional
 
 from jsonpath_ng import parse
 
 from aquality_selenium_core.utilities.resource_file import ResourceFile
 
+T = TypeVar("T")
+
 
 class AbstractSettingsFile(ABC):
     """Abstract class which defines work with settings file."""
 
     @abstractmethod
-    def get_value(self, path: str) -> Any:
+    def get_value(self, path: str) -> T:
         """
         Get single value by specified path from settings file.
 
@@ -27,8 +29,18 @@ class AbstractSettingsFile(ABC):
         """
         pass
 
+    def get_value_or_default(self, path: str, default: T) -> T:
+        """
+        Get single value by specified path from settings file or default if not present.
+
+        :param path: Path to value.
+        :param default: Default value.
+        :return: Value from file or default if not present.
+        """
+        return self.get_value(path) if self.is_value_present(path) else default
+
     @abstractmethod
-    def get_list(self, path: str) -> List[str]:
+    def get_list(self, path: str) -> List[T]:
         """
         Get list of values by specified path from settings file.
 
@@ -38,7 +50,7 @@ class AbstractSettingsFile(ABC):
         pass
 
     @abstractmethod
-    def get_dictionary(self, path: str) -> Dict[str, Any]:
+    def get_dictionary(self, path: str) -> Dict[str, T]:
         """
         Get dictionary of values by specified path from settings file.
 
@@ -57,16 +69,6 @@ class AbstractSettingsFile(ABC):
         """
         pass
 
-    def get_value_or_default(self, path: str, default_value: object) -> Any:
-        """
-        Get value from settings if present in settings file or return passed default value.
-
-        :param path: Path to value.
-        :param default_value: Value which will be returned if settings file doesn't contains data by provided path.
-        :return: Value by specified key.
-        """
-        return self.get_value(path) if self.is_value_present(path) else default_value
-
 
 class JsonSettingsFile(AbstractSettingsFile):
     """Class which defines work with .json settings file."""
@@ -76,7 +78,7 @@ class JsonSettingsFile(AbstractSettingsFile):
         self.__resource_file = ResourceFile(resource_name)
         self.__content = json.loads(self.__resource_file.file_content)
 
-    def get_value(self, path: str) -> Any:
+    def get_value(self, path: str) -> T:
         """
         Get single value by specified path from environment variables or settings file.
 
@@ -102,7 +104,7 @@ class JsonSettingsFile(AbstractSettingsFile):
         )
         return [value.strip() for value in data]
 
-    def get_dictionary(self, path: str) -> Dict[str, Any]:
+    def get_dictionary(self, path: str) -> Dict[str, T]:
         """
         Get dictionary of values by specified path from settings file.
 
@@ -127,7 +129,7 @@ class JsonSettingsFile(AbstractSettingsFile):
 
     def __get_env_value_or_default(
         self, json_path: str, throw_if_empty: bool = False
-    ) -> Any:
+    ) -> T:
         env_var = self.__get_env_value(json_path)
         node = self.__get_json_node(json_path, throw_if_empty and not env_var)
         return self.__use_env_value_or_default(node, env_var) if node else env_var
@@ -136,7 +138,7 @@ class JsonSettingsFile(AbstractSettingsFile):
     def __use_env_value_or_default(node, env_value):
         return node[0].value if not env_value else env_value
 
-    def __get_json_node(self, json_path: str, throw_if_empty: bool) -> Any:
+    def __get_json_node(self, json_path: str, throw_if_empty: bool) -> T:
         node = parse(f"$.{json_path}").find(self.__content)
         if not node and throw_if_empty:
             raise ValueError(

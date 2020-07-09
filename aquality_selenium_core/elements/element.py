@@ -6,6 +6,7 @@ from datetime import timedelta
 from typing import Callable
 from typing import cast
 from typing import List
+from typing import Tuple
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import WebDriverException
@@ -29,7 +30,12 @@ from aquality_selenium_core.elements.element_state import Displayed
 from aquality_selenium_core.elements.element_state_provider import (
     AbstractElementStateProvider,
 )
+from aquality_selenium_core.elements.element_state_provider import (
+    CachedElementStateProvider,
+)
+from aquality_selenium_core.elements.element_state_provider import ElementStateProvider
 from aquality_selenium_core.elements.elements_count import ElementsCount
+from aquality_selenium_core.elements.parent import AbstractParent
 from aquality_selenium_core.elements.parent import TElement
 from aquality_selenium_core.localization.localization_manager import (
     AbstractLocalizationManager,
@@ -42,10 +48,12 @@ from aquality_selenium_core.utilities.element_action_retrier import (
 from aquality_selenium_core.waitings.conditional_wait import AbstractConditionalWait
 
 
-class AbstractElement(ABC):
+class AbstractElement(AbstractParent, ABC):
     """Base class for any custom element."""
 
-    def __init__(self, locator: By, name: str, state: Callable):
+    def __init__(
+        self, locator: Tuple[By, str], name: str, state: Callable[[WebElement], bool]
+    ):
         """Initialize element with locator, name and state."""
         self.__locator = locator
         self.__name = name
@@ -53,7 +61,7 @@ class AbstractElement(ABC):
         self.__element_cache_handler = cast(AbstractElementCacheHandler, None)
 
     @property
-    def locator(self) -> By:
+    def locator(self) -> Tuple[By, str]:
         """
         Get unique locator of element.
 
@@ -82,7 +90,14 @@ class AbstractElement(ABC):
         Provider allows to define element's state (whether it is displayed, exists or not).
         :return: Provider to define element's state.
         """
-        raise NotImplementedError
+        if self._cache_configuration.is_enabled:
+            return CachedElementStateProvider(
+                self.locator, self._conditional_wait, self._cache
+            )
+        else:
+            return ElementStateProvider(
+                self.locator, self._conditional_wait, self._element_finder
+            )
 
     @property
     def text(self) -> str:
@@ -132,7 +147,7 @@ class AbstractElement(ABC):
 
         self._do_with_retry(func)
 
-    def get_element(self, timeout: timedelta = timedelta.min) -> WebElement:
+    def get_element(self, timeout: timedelta = cast(timedelta, None)) -> WebElement:
         """
         Get current element by specified locator.
 
@@ -228,42 +243,42 @@ class AbstractElement(ABC):
 
     def find_child_element(
         self,
-        child_locator: By,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
-        state: Callable = Displayed(),
+        state: Callable[[WebElement], bool] = Displayed(),
     ) -> TElement:
         """
-        Find the child element of type TElement of current element by its locator.
+        Find child element of type TElement of current element by its locator.
 
+        :param supplier: Callable object that defines constructor of child element in case of custom element.
         :param child_locator: Locator of child element.
         :param name: Child element name.
-        :param supplier: Delegate that defines constructor of child element in case of custom element.
         :param state: Child element state.
         :return: Instance of child element.
         """
         return self._element_factory.find_child_element(
-            self, child_locator, name, supplier, state
+            self, supplier, child_locator, name, state
         )
 
     def find_child_elements(
         self,
-        child_locator: By,
+        supplier: Callable[[Tuple[By, str], str, Callable], TElement],
+        child_locator: Tuple[By, str],
         name: str,
-        supplier: Callable[[By, str, Callable], TElement],
+        state: Callable[[WebElement], bool] = Displayed(),
         expected_count: ElementsCount = ElementsCount.ANY,
-        state: Callable = Displayed(),
     ) -> List[TElement]:
         """
-        Find child elements of current element by its locator.
+        Find child elements of type TElement of current element by its locator.
 
+        :param supplier: Callable object that defines constructor of child element in case of custom element.
         :param child_locator: Locator of child elements relative to their parent.
         :param name: Child elements name.
-        :param supplier: Delegate that defines constructor of child element in case of custom element type.
-        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :param state: Child elements state.
+        :param expected_count: Expected number of elements that have to be found (zero, more than zero, any).
         :return: List of child elements.
         """
         return self._element_factory.find_child_elements(
-            self, child_locator, name, supplier, expected_count, state
+            self, supplier, child_locator, name, state, expected_count
         )
