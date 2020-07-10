@@ -9,8 +9,11 @@ from typing import List
 from typing import Type
 from typing import TypeVar
 
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
 
+from aquality_selenium_core.applications.application import AbstractApplication
 from aquality_selenium_core.configurations.timeout_configuration import (
     AbstractTimeoutConfiguration,
 )
@@ -86,9 +89,14 @@ class AbstractConditionalWait(ABC):
 class ConditionalWait(AbstractConditionalWait):
     """This class is used for waiting any conditions."""
 
-    def __init__(self, timeout_configuration: AbstractTimeoutConfiguration):
+    def __init__(
+        self,
+        timeout_configuration: AbstractTimeoutConfiguration,
+        application: AbstractApplication,
+    ):
         """Initialize with configuration."""
         self.__timeout_configuration = timeout_configuration
+        self.__application = application
 
     def wait_for_with_driver(
         self,
@@ -109,7 +117,23 @@ class ConditionalWait(AbstractConditionalWait):
         :return: Result of condition.
         :raises: TimeoutException when timeout exceeded and condition not satisfied.
         """
-        raise NotImplementedError
+        wait_timeout = self.__resolve_condition_timeout(timeout)
+        check_interval = self.__resolve_polling_interval(polling_interval)
+        ignored_exceptions = (
+            exceptions_to_ignore
+            if exceptions_to_ignore
+            else [StaleElementReferenceException]
+        )
+        self.__application.set_implicit_wait_timeout(timedelta())
+        wait = WebDriverWait(
+            self.__application.driver, wait_timeout, check_interval, ignored_exceptions
+        )
+        try:
+            return cast(T, wait.until(condition, message))
+        finally:
+            self.__application.set_implicit_wait_timeout(
+                self.__timeout_configuration.implicit
+            )
 
     def wait_for(
         self,
